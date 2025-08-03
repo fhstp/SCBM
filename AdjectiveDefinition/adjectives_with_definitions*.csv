@@ -1,0 +1,245 @@
+adjective_de,Counter Speech,Counter Hate,Hate Speech,Sentiment,Toxicity ,adjective,definitions
+beschimpfend,,X,X,,,abusive,"Abusive is defined as causing or involving physical, emotional, or verbal harm to others."
+akzeptierend,X,,,,,accepting,Accepting is defined as willing to receive or approve of others or their ideas without judgment or resistance.
+entgegenkommend,X,,,,,accommodating,Accommodating is defined as willing to help or do favors; obliging and considerate.
+bewundernd,X,,,,,admiring,"Admiring is defined as showing respect, approval, or warm regard for someone or something."
+altersdiskriminierend,,X,X,,,age discriminatory,Age discriminatory is defined as treating someone unfairly or unequally based on their age.
+aggressiv,,X,X,,,aggressive,"Aggressive is defined as behaving in a forceful or hostile manner, often with the intent to dominate or confront."
+amüsiert,X,X,X,,,amused,"Amused is defined as experiencing or showing mild enjoyment, laughter, or entertainment."
+belustigend,X,X,X,,,amusing,Amusing is defined as causing laughter or providing entertainment in a light-hearted way.
+verärgert,X,X,X,,,annoyed,Annoyed is defined as feeling slightly angry or irritated due to someone or something.
+behindertenfeindlich,,X,X,,,anti-disabled,"Anti-disabled is defined as showing prejudice, discrimination, or hostility toward disabled people or disability rights."
+antifeministisch,,X,X,,,anti-feminist,Anti-feminist is defined as opposing or rejecting the principles of feminism or gender equality advocacy.
+antiziganistisch,,X,X,,,antigypsyist,"Antigypsyist is defined as showing or characterized by prejudice, hostility, or discrimination against Roma or other perceived Gypsy communities."
+queerfeindlich,,X,X,,,anti-queer,"Anti-queer is defined as expressing or characterized by hostility, prejudice, or discrimination against queer individuals or communities."
+religionsfeindlich,,X,X,,,anti-religious,Anti-religious is defined as opposed to or hostile toward religion or religious practices.
+antisemitisch,,X,X,,,anti-Semitic,anti-Semitic is defined as showing hostility toward or discrimination against Jewish people.
+anerkennend,X,,,,,appreciative,Appreciative is defined as feeling or showing gratitude or recognition for something.
+argumentativ,X,X,X,,,argumentative,Argumentative is defined as inclined to express or engage in disagreement or debate.
+grausam,,X,X,,,awful,"Awful is defined as extremely bad, unpleasant, or shocking."
+ausbalancierend,X,,,,,balancing,Balancing is defined as maintaining or achieving stability or equilibrium among different elements or forces.
+herabsetzend,,X,X,,,belittling,Belittling is defined as making someone or something seem less impressive or important.
+bitter,,X,X,,,bitter,"Bitter is defined as having a sharp, pungent taste or exhibiting strong feelings of resentment or hostility."
+bodyshamend,,X,X,,,body shaming,Body shaming is defined as criticizing or mocking someone’s physical appearance in a way that promotes embarrassment or shame.
+mutig,X,,,,,brave,Brave is defined as showing courage and facing danger or difficulty without fear.
+brückenbauend,X,,,,,building bridges,Building bridges is defined as fostering connections and understanding between people or groups.
+schikanierend,,X,X,,,bullying,"Bullying is defined as exhibiting aggressive, intimidating, or coercive behavior towards others, often repeatedly and intentionally."
+gelassen,X,,,,,calmly,Calmly is defined as in a quiet and peaceful manner without agitation or excitement.
+behutsam,X,,,,,carefully,"Carefully is defined as acting with attention, caution, or thoroughness to avoid mistakes or harm."
+herausfordernd,X,X,X,,,challenging,"Challenging is defined as demanding effort, skill, or determination in a difficult or stimulating way."
+aggressionsgeladen,,X,X,,,charged with aggression,"Charged with aggression is defined as displaying intense hostility, anger, or a readiness to confront or attack."
+chauvinistisch,,X,X,,,chauvinistic,"chauvinistic is defined as showing excessive or prejudiced support for one's own cause, group, or sex."
+prüfend,X,,,,,checking,"Checking is defined as examining, verifying, or inspecting something for accuracy or correctness."
+engagiert,X,,,,,committed,"Committed is defined as being dedicated or loyal to a cause, activity, or person."
+gemeinschaftsorientiert,X,,,,,community oriented,"Community oriented is defined as focused on supporting, engaging with, and improving the well-being of a local group or society."
+versöhnlich,X,,,,,conciliatory,"conciliatory is defined as intended to pacify, appease, or bring about agreement between conflicting parties."
+beweiskräftig,X,,,,,conclusive,Conclusive is defined as serving to prove a case or end doubt or uncertainty.
+verurteilend,X,X,X,,,condemning,Condemning is defined as expressing strong disapproval or judgment toward someone or something.
+gewaltverurteilend,X,,,,,condemning violence,Condemning violence is defined as expressing strong disapproval of the use of physical force to harm or intimidate.
+herablassend,,X,X,,,condescending,"Condescending is defined as displaying a superior attitude toward others, often in a patronizing manner."
+konfliktreich,,X,X,,,conflictual,"Conflictual is defined as involving or characterized by conflict, tension, or disagreement."
+konfrontativ,X,X,X,,,confrontational,Confrontational is defined as inclined to deal with situations in an aggressive or argumentative way.
+rücksichtsvoll,X,,,,,considerate,Considerate is defined as showing careful thought for the needs and feelings of others.
+konstruktiv,X,,,,,constructive,Constructive is defined as serving a useful purpose or helping to develop or improve something.
+geringschätzend,,X,X,,,contemptuous,Contemptuous is defined as showing or expressing deep hatred or disapproval.
+widersprechend,X,,,,,contradictory,"Contradictory is defined as mutually opposing or inconsistent in meaning, action, or statement."
+zuwiderlaufend,X,X,,,,contrary,"Contrary is defined as opposite in nature, direction, or meaning."
+kontrastierend,X,,,,,contrasting,"Contrasting is defined as being strikingly different in comparison, highlighting differences when compared side by side."
+umstritten,,X,X,,,controversial,Controversial is defined as causing disagreement or discussion due to differing opinions.
+überzeugend,X,,,,,convincing,Convincing is defined as capable of causing someone to believe that something is true or real.
+korrigierend,X,,,,,corrective,"Corrective is defined as intended to correct, improve, or counteract a fault or problem."
+kreativ,X,X,X,,,creative,Creative is defined as having the ability to produce original and imaginative ideas or things.
+kritisch,X,X,,,,critical,"Critical is defined as expressing disapproval or involving careful judgment, often highlighting problems or faults."
+grenzüberschreitend,,X,X,,,cross-border,cross-border is defined as relating to or involving movement or interaction across national or regional boundaries.
+neugierig,X,,,,,curious,Curious is defined as having a strong desire to learn or know something.
+gefährlich,,X,X,,,dangerous,"Dangerous is defined as likely to cause harm, injury, or damage."
+verleumderisch,,X,X,,,defamatory,Defamatory is defined as damaging the good reputation of someone through false or malicious statements.
+verteidigend,X,,,,,defensive,Defensive is defined as being protective or quick to justify oneself against criticism or attack.
+degradierend,,X,X,,,degrading,"Degrading is defined as causing a loss of respect, dignity, or self-worth."
+entmenschlichend,,X,X,,,dehumanizing,"Dehumanizing is defined as treating people as if they are less than human, often by denying their dignity, individuality, or compassion."
+abwägend,x,x,,,,deliberative,Deliberative is defined as involving careful consideration or discussion before making decisions.
+demokratisch,X,,,,,democratically,"Democratically is defined as in a manner that involves or is based on the principles of democracy, such as voting or equal participation."
+abfällig,,X,X,,,derogatory,Derogatory is defined as showing a critical or disrespectful attitude.
+verabscheuungswürdig,,X,X,,,despicable,Despicable is defined as deserving to be despised or regarded with contempt or disgust.
+zerstörerisch,,X,X,,,destructive,Destructive is defined as causing great damage or harm.
+entwertend,,X,X,,,devaluing,"Devaluing is defined as reducing or belittling the worth, importance, or value of someone or something."
+dialogorientiert,X,,,,,dialogue-oriented,Dialogue-oriented is defined as focused on encouraging open communication and exchange of ideas between individuals or groups.
+meinungsverschieden,X,X,X,,,different opinions,"Different opinions is defined as varying or opposing views, beliefs, or judgments held by different individuals."
+differenzierend,X,,,,,differentiating,Differentiating is defined as distinguishing or showing the differences between two or more things.
+diplomatisch,X,,,,,diplomatic,Diplomatic is defined as having or showing skill in dealing with people or sensitive situations tactfully and effectively.
+enttäuscht,X,X,X,,,disappointed,Disappointed is defined as feeling unhappy or let down because something did not happen as expected.
+diskreditierend,,X,X,,,discreditable,Discreditable is defined as damaging to one's reputation or bringing shame or dishonor.
+diskriminierend,,X,X,,,discriminatory,Discriminatory is defined as showing or involving unfair or prejudicial treatment of different categories of people.
+diskutierend,X,,,,,discussing,Discussing is defined as engaging in conversation or debate about a topic to exchange ideas or reach a conclusion.
+widerwärtig,,X,X,,,disgusting,Disgusting is defined as causing a strong feeling of revulsion or profound disapproval.
+abweisend,X,X,X,,,dismissive,Dismissive is defined as showing a lack of interest or respect for someone or something.
+respektlos,,X,X,,,disrespectful,Disrespectful is defined as showing a lack of respect or courtesy toward someone or something.
+distanzierend,X,,,,,distancing,Distancing is defined as creating emotional or physical space between oneself and others or a situation.
+sich distanzierend,X,,,,,distancing yourself,Distancing yourself is defined as deliberately creating emotional or physical space between yourself and others or a situation.
+unterscheidend,X,,,,,distinctive,Distinctive is defined as having a quality or characteristic that makes something noticeably different or easily recognizable.
+ablenkend,X,,X,,,distracting,Distracting is defined as causing someone to lose focus or attention due to interruption or diversion.
+störend,,X,X,,,disturbing,"Disturbing is defined as causing anxiety, discomfort, or emotional upset."
+diversitätsbewusst,X,,,,,diversity conscious,"Diversity conscious is defined as being aware of and actively respectful toward differences in culture, identity, and experience."
+spaltend,,X,X,,,divisive,Divisive is defined as causing disagreement or hostility between people.
+erbaulich,X,,,,,edifying,Edifying is defined as morally or intellectually instructive and uplifting.
+effektiv,X,,,,,effectively,Effectively is defined as in a way that produces the intended result or success.
+emanzipatorisch,X,,,,,emancipatory,"Emancipatory is defined as promoting or aiming to achieve freedom from social, political, or legal restrictions."
+emotional,X,X,X,,,emotionally,Emotionally is defined as in a manner that relates to or expresses strong feelings or emotions.
+empathisch,X,,,,,empathetic,Empathetic is defined as having the ability to understand and share the feelings of another.
+aufmunternd,X,,,,,encouraging,"Encouraging is defined as giving someone support, confidence, or hope."
+aufklärerisch,X,,,,,enlightening,Enlightening is defined as providing new insight or knowledge that clarifies or informs.
+gleichberechtigt,X,,,,,Equal rights,"Equal rights is defined as the guarantee that all individuals have the same legal, social, and political opportunities regardless of differences such as race, gender, or religion."
+beweisführend,X,,,,,evidential,"Evidential is defined as relating to, providing, or serving as evidence."
+ausgrenzend,,X,X,,,exclusionary,Exclusionary is defined as tending to exclude or leave out certain people or groups.
+bedenkenausdrückend,X,,,,,expressing concern,"Expressing concern is defined as showing worry, care, or interest about someone's well-being or a particular situation."
+ausdrucksstark,X,X,X,,,expressive,"Expressive is defined as effectively conveying thought or feeling through words, gestures, or appearance."
+extremistisch,,X,X,,,extremist,Extremist is defined as holding extreme political or religious views far outside the mainstream.
+faktenbasiert,X,,,,,fact-based,fact-based is defined as grounded in or derived from verifiable facts or evidence.
+faktenbezogen,X,,,,,factual,Factual is defined as based on or concerned with actual events or real information rather than opinions or interpretations.
+fair,X,,,,,fair,Fair is defined as treating all people equally without favoritism or discrimination.
+feministisch,X,,,,,feminist,"Feminist is defined as advocating for equal rights and opportunities for all genders, especially in support of women's rights."
+freundlich,X,,,,,friendly,Friendly is defined as behaving in a kind and pleasant way toward others.
+frustriert,X,X,X,,,frustrated,Frustrated is defined as feeling annoyed or upset due to being unable to achieve a goal or solve a problem.
+lustig,X,X,X,,,funny,Funny is defined as causing laughter or amusement; humorous.
+geschlechterdiskriminierend,,X,X,,,gender discriminatory,Gender discriminatory is defined as treating individuals unfairly or unequally based on their gender.
+schadenfroh,,X,X,,,gleefully,Gleefully is defined as in a joyful or delighted manner.
+gewaltverherrlichend,,X,X,,,glorifying violence,"Glorifying violence is defined as portraying violent actions in a way that makes them seem admirable, heroic, or desirable."
+belästigend,,X,X,,,harassing,"Harassing is defined as persistently troubling, annoying, or attacking someone in an aggressive or unwanted manner."
+schädlich,,X,X,,,harmful,"Harmful is defined as causing or likely to cause damage, injury, or negative effects."
+hasserfüllt,,X,X,,,hateful,Hateful is defined as feeling or showing intense dislike or ill will.
+hilfsbereit,X,,,,,helpful,Helpful is defined as giving or ready to give help or useful assistance.
+homofeindlich,,X,X,,,homophobic,Homophobic is defined as having or showing a dislike of or prejudice against homosexual people.
+anfeindend,,X,X,,,hostile,Hostile is defined as unfriendly or antagonistic in nature or behavior.
+minderheitenfeindlich,,X,X,,,hostile to minorities,"Hostile to minorities is defined as exhibiting antagonism, prejudice, or discrimination toward individuals or groups based on their minority status."
+menschenfreundlich,X,,,,,humane,"humane is defined as showing compassion, kindness, and sympathy toward others, especially in treating people or animals."
+erniedrigend,,X,X,,,humiliating,"Humiliating is defined as causing someone to feel ashamed, foolish, or degraded."
+humorvoll,X,X,X,,,humorous,Humorous is defined as causing laughter or amusement; funny.
+verletzend,,X,X,,,hurtful,hurtful is defined as causing pain or distress to someone's feelings.
+ignorant,,X,X,,,ignorant,"Ignorant is defined as lacking knowledge, awareness, or education in a particular subject."
+einwandsbereit,X,,,,,impeccable,Impeccable is defined as flawless or without any errors or faults.
+pietätlos,,X,X,,,impious,Impious is defined as lacking reverence or respect for religious or sacred things.
+unangemessen,,X,X,,,inappropriate,Inappropriate is defined as not suitable or proper in a particular situation.
+gewaltaufrufend,,X,X,,,inciting violence,"Inciting violence is defined as encouraging, provoking, or urging others to commit acts of physical aggression or disorder."
+unverständlich,X,X,X,,,incomprehensible,incomprehensible is defined as impossible or very difficult to understand.
+hetzerisch,,X,X,,,inflammatory,"Inflammatory is defined as arousing strong emotion, especially anger or hostility."
+informierend,X,,,,,informative,Informative is defined as providing useful or interesting information.
+informiert,X,,,,,informed,Informed is defined as having or showing knowledge of a particular subject or situation.
+unmenschlich,,X,X,,,inhuman,"inhuman is defined as lacking human qualities of compassion, mercy, or kindness."
+menschenverachtend,,X,X,,,inhumane,inhumane is defined as lacking compassion or kindness; cruel or brutal.
+nachfragend,X,,,,,inquiring,Inquiring is defined as showing curiosity or a desire to gain knowledge.
+unsensibel,,X,X,,,insensitive,Insensitive is defined as lacking awareness or concern for the feelings of others.
+heimtückisch,,X,X,,,insidious,"Insidious is defined as proceeding in a gradual, subtle way but with harmful effects."
+einsichtsvoll,X,,,,,insightful,Insightful is defined as showing a deep understanding of a person or situation.
+schmähend,,X,X,,,insulting,Insulting is defined as causing offense or disrespect through words or actions.
+integrativ,X,,,,,integrative,Integrative is defined as combining or coordinating separate elements to provide a unified whole.
+einschüchternd,,X,X,,,intimidating,"Intimidating is defined as causing fear or nervousness due to being powerful, threatening, or impressive."
+intolerant,,X,X,,,intolerant,"Intolerant is defined as unwilling to accept views, beliefs, or behaviors that differ from one's own."
+untersuchend,X,,,,,investigating,Investigating is defined as examining or inquiring into something thoroughly to discover facts or information.
+unverantwortlich,,X,X,,,irresponsible,Irresponsible is defined as not showing a proper sense of duty or accountability.
+islamfeindlich,,X,X,,,Islamophobic,"Islamophobic is defined as having or showing dislike, prejudice, or irrational fear towards Islam or Muslims."
+sachkundig,X,,,,,knowledgeable,"Knowledgeable is defined as possessing or showing a great deal of knowledge, insight, or understanding."
+ettiketierend,,X,X,,,labeling,"Labeling is defined as describing or classifying someone or something in a specific way, often based on stereotypes or limited information."
+objektiv ,X,,,,,lens,"Lens is defined as describing something related to a particular perspective, focus, or way of viewing information."
+bösartig,,X,X,,,malicious,Malicious is defined as having or showing a desire to cause harm or suffering to others.
+vermittelnd,X,,,,,mediating,Mediating is defined as acting as an intermediary to bring about agreement or resolve a conflict between parties.
+misanthropisch,,X,X,,,misanthropic,Misanthropic is defined as having or showing a deep distrust or hatred of humankind.
+misogyn,,X,X,,,misogynistic,"Misogynistic is defined as showing hatred, dislike, or prejudice against women."
+spöttisch,X,X,X,,,mockingly,Mockingly is defined as in a manner that makes fun of or ridicules someone or something.
+moderierend,X,,,,,moderating,"Moderating is defined as reducing the intensity, severity, or extremeness of something."
+moralisierend,X,,,,,moralizing,Moralizing is defined as expressing judgments about what is right or wrong in a self-righteous or preachy manner.
+motivierend,X,,,,,motivating,Motivating is defined as providing someone with a reason or incentive to take action or feel enthusiastic.
+negativ,,X,X,,,negative,"Negative is defined as expressing denial, disagreement, or an unfavorable quality or condition."
+neutralisierend,X,,,,,neutralizing,Neutralizing is defined as counteracting or canceling the effect of something.
+gewaltfrei,X,,,,,non-violent,non-violent is defined as avoiding the use of physical force or aggression to resolve conflicts or achieve goals.
+nuanzierend,X,,,,,nuanced,"Nuanced is defined as characterized by subtle distinctions or variations in meaning, expression, or sound."
+obszön,,X,X,,,obscene,Obscene is defined as offensive or disgusting by accepted standards of morality or decency.
+kränkend,,X,X,,,offending,"Offending is defined as causing displeasure, resentment, or a breach of law or etiquette."
+anstößig,,X,X,,,offensive,"Offensive is defined as causing someone to feel hurt, upset, or angry, often through rude or disrespectful behavior."
+aufgeschlossen,X,,,,,open minded,"Open minded is defined as being willing to consider new ideas, perspectives, or experiences without prejudice."
+unterdrückend,,X,X,,,oppressive,"Oppressive is defined as unjustly harsh, cruel, or burdensome in a way that limits freedom or causes discomfort."
+optimistisch,X,,,,,optimistic,Optimistic is defined as having a hopeful and positive outlook about the future or successful outcomes.
+empört,X,X,X,,,outraged,outraged is defined as feeling intense anger or indignation due to something perceived as wrong or unjust.
+empörend,x,X,X,,,outrageous,"Outrageous is defined as shockingly bad, excessive, or beyond acceptable limits."
+überdenkend,X,,,,,overthinking,"Overthinking is defined as excessively analyzing or dwelling on a situation, decision, or problem to the point of hindering action or causing stress."
+leidenschaftlich,X,X,X,,,passionate,"Passionate is defined as having or showing intense emotion, enthusiasm, or strong affection."
+passiv-aggressiv,,X,X,,,passive-aggressive,"Passive-aggressive is defined as indirectly expressing negative feelings through subtle, avoidant, or resistant behavior instead of openly addressing them."
+erbärmlich,,X,X,,,pathetic,"Pathetic is defined as arousing pity, sympathy, or contempt due to weakness or inadequacy."
+geduldig,X,,,,,patient,"Patient is defined as able to accept or tolerate delays, problems, or suffering without becoming annoyed or anxious."
+friedlich,X,,,,,peaceful,"Peaceful is defined as free from disturbance, violence, or conflict; calm and tranquil."
+beharrlich,X,X,X,,,persistently,Persistently is defined as continuing firmly or obstinately in a course of action despite difficulty or opposition.
+polemisch,,X,X,,,polemical,"Polemical is defined as strongly critical, controversial, or argumentative, especially in speech or writing."
+höflich,X,,,,,polite,"Polite is defined as showing good manners, respect, and consideration for others."
+positiv,X,,,,,positive,"Positive is defined as showing optimism, approval, or a constructive attitude."
+hasspredigend,,X,X,,,preaching hate,"Preaching hate is defined as promoting hostility, intolerance, or violence toward individuals or groups through speech or expression."
+vorurteilsbehaftet,,X,X,,,prejudiced,Prejudiced is defined as having or showing an unfair dislike or bias against a person or group without proper knowledge or reason.
+aggressionsfördernd,,X,X,,,promoting aggression,"Promoting aggression is defined as encouraging hostility, violence, or confrontational behavior in others."
+demokratiefördernd,X,,,,,promoting democracy,Promoting democracy is defined as supporting or encouraging the development and practice of democratic principles and institutions.
+dialogfördernd,X,,,,,promoting dialogue,"Promoting dialogue is defined as encouraging open, respectful, and constructive communication between individuals or groups."
+toleranzfördernd,X,,,,,promoting tolerance,"Promoting tolerance is defined as encouraging acceptance and understanding of different beliefs, cultures, and perspectives."
+provokativ,,X,X,,,provocative,"Provocative is defined as tending to provoke a reaction, especially anger, curiosity, or interest."
+umsichtig,X,,,,,prudent,Prudent is defined as acting with care and thought for the future.
+hinterfragend,X,,,,,questioning,Questioning is defined as expressing doubt or seeking information through inquiry or uncertainty.
+rassistisch,,X,X,,,racist,Racist is defined as showing or believing in the prejudice that one race is inherently superior to others.
+radikal,,X,X,,,radical,Radical is defined as advocating for thorough or complete political or social reform.
+rational,X,,,,,rational,Rational is defined as being based on reason or logic rather than emotion or instinct.
+räsonnierend,X,,,,,reasoning,Reasoning is defined as the process of thinking logically and systematically to form conclusions or judgments.
+vorurteilsabbauend,X,,,,,reducing prejudice,Reducing prejudice is defined as actively diminishing biased attitudes or discriminatory behaviors toward individuals or groups.
+reflexiv,X,,,,,reflexive,reflexive is defined as describing an action directed back on the subject itself.
+widerlegend,X,,,,,refuting,Refuting is defined as disproving or proving something to be false or incorrect.
+ablehnend,X,X,X,,,rejecting,"Rejecting is defined as refusing to accept, believe, or agree with something or someone."
+relativierend,X,X,X,,,relativizing,Relativizing is defined as making something seem less absolute or less universally applicable by considering it in relation to other factors or perspectives.
+verwerflich,,X,X,,,reprehensible,Reprehensible is defined as deserving of strong criticism or disapproval.
+abstoßend,,X,X,,,repulsive,Repulsive is defined as causing strong dislike or disgust.
+respektvoll,X,,,,,respectful,"Respectful is defined as showing politeness, honor, or consideration toward others."
+achtungsvoll,X,,,,,respectfully,"Respectfully is defined as showing or characterized by politeness, honor, or deference toward someone or something."
+respektierend,X,,,,,respecting,"Respecting is defined as showing consideration, regard, or esteem toward someone or something."
+umkehrend,X,,,,,reversing,Reversing is defined as moving backward or causing something to move in the opposite direction.
+revidierend,X,,,,,revising,"Revising is defined as reviewing and altering content to improve accuracy, clarity, or quality."
+widerrufend,X,,,,,revoking,"Revoking is defined as canceling or withdrawing a decision, order, or privilege."
+grob,,X,X,,,rough,Rough is defined as having an uneven or irregular surface; not smooth or level.
+rücksichtslos,,X,X,,,ruthless,Ruthless is defined as showing no pity or compassion for others.
+sarkastisch,X,X,X,,,sarcastic,Sarcastic is defined as using irony to mock or convey contempt.
+satirisch,X,X,X,,,satirical,"Satirical is defined as using humor, irony, or ridicule to criticize or expose flaws in people, society, or institutions."
+einfühlsam,X,,,,,sensitive,Sensitive is defined as easily affected by external influences or capable of perceiving slight changes or emotions.
+sensibilisiernd,X,,,,,sensitizing,Sensitizing is defined as causing someone or something to become more responsive or susceptible to stimuli or influences.
+sexistisch,,X,X,,,sexist,Sexist is defined as demonstrating or promoting discrimination or prejudice based on a person's sex or gender.
+sexualisierend,,X,X,,,sexualizing,Sexualizing is defined as viewing or treating someone or something primarily in terms of sexual attributes or desire.
+beschämend,,X,X,,,shameful,Shameful is defined as causing or deserving feelings of shame or disgrace.
+schamlos,,X,X,,,shameless,"Shameless is defined as showing a lack of shame, embarrassment, or guilt about one's actions or behavior."
+scharfsinnig,X,,,,,sharp,Sharp is defined as having a fine edge or point that can cut or pierce something easily.
+skeptisch,X,,,,,skeptical,Skeptical is defined as having doubts or questioning the truth or validity of something.
+solidarisch,X,,,,,solidaric,Solidaric is defined as showing or expressing unity and mutual support within a group.
+gehässig,,X,X,,,spiteful,"Spiteful is defined as showing or caused by malice or a desire to hurt, annoy, or offend someone."
+hassverbreitend,,X,X,,,spreading hate,"Spreading hate is defined as promoting or disseminating hostility, prejudice, or intolerance toward individuals or groups."
+konfliktschürend,,X,X,,,stirring up conflict,Stirring up conflict is defined as deliberately provoking tension or disagreement between individuals or groups.
+gemeinschaftsstärkend,X,,,,,strengthening the community,"Strengthening the community is defined as enhancing social bonds, cooperation, and support systems to improve collective well-being and resilience."
+zurückschlagend,,X,,,,striking back,Striking back is defined as retaliating or responding forcefully to an attack or provocation.
+hartnäckig,X,X,X,,,stubborn,"Stubborn is defined as being unwilling to change one's attitude or position on something, despite good reasons to do so."
+unterstützend,X,,,,,supportive,"Supportive is defined as providing encouragement, help, or emotional assistance to others."
+terrorisierend,,X,X,,,terrorizing,"Terrorizing is defined as instilling intense fear or dread in others, often through threats or violent actions."
+denkanstoßend,X,,,,,thought-provoking,"thought-provoking is defined as causing deep thinking, reflection, or consideration."
+bedrohend,,X,X,,,threatening,Threatening is defined as showing intent to cause harm or danger.
+tolerant,X,,,,,tolerant,"Tolerant is defined as showing willingness to accept behaviors, beliefs, or opinions different from one's own."
+toxisch,,X,X,,,toxic,"Toxic is defined as harmful, poisonous, or detrimental, especially to health or relationships."
+transfeindlich,,X,X,,,transphobic,"Transphobic is defined as showing or having dislike, prejudice, or discrimination against transgender people."
+inakzeptabel,,X,X,,,unacceptable,"Unacceptable is defined as not satisfactory or allowable by societal, moral, or personal standards."
+unvoreingenommen,X,,,,,unbiased,Unbiased is defined as showing no prejudice or favoritism; impartial and objective.
+unzivilisiert,,X,X,,,uncivilized,"Uncivilized is defined as lacking manners, culture, or social development."
+verständnisvoll,X,,,,,understanding,"Understanding is defined as showing sympathy, compassion, or insight into someone else's feelings or situation."
+unfair,,X,X,,,unfair,Unfair is defined as not based on or behaving according to the principles of equality and justice.
+unverzeihlich,,X,X,,,unforgivable,Unforgivable is defined as too severe or offensive to be excused or pardoned.
+unnötig,,X,X,,,unnecessary,Unnecessary is defined as not needed or more than what is required.
+unangenehm,,X,X,,,unpleasant,"Unpleasant is defined as causing discomfort, annoyance, or dislike."
+vorbehaltlos,X,,,,,unreservedly,"Unreservedly is defined as acting or expressing something openly, without hesitation or limitations."
+ungezügelt,,X,X,,,unrestrained,Unrestrained is defined as not controlled or held back; free and uninhibited.
+unzufrieden,X,X,X,,,unsatisfied,"Unsatisfied is defined as not content or pleased with a situation, outcome, or experience."
+aufgeregt,X,X,X,,,upset,"Upset is defined as feeling unhappy, disappointed, or disturbed emotionally."
+stichhaltig,X,,,,,valid,"Valid is defined as being logically sound, legally acceptable, or based on truth or fact."
+niederträchtig,,X,X,,,vile,"Vile is defined as extremely unpleasant, morally bad, or wicked."
+gewaltbereit,,X,X,,,violent,"Violent is defined as using or involving physical force intended to hurt, damage, or kill someone or something."
+vulgär,,X,X,,,vulgar,Vulgar is defined as lacking sophistication or good taste; crude or indecent.
+warmherzig,X,,,,,warm-hearted,"warm-hearted is defined as showing kindness, sympathy, and affection towards others."
+abschwächend,X,X,X,,,weakening,"Weakening is defined as becoming less strong, intense, or effective."
+besorgt,X,,,,,worried,Worried is defined as feeling anxious or concerned about something uncertain or troubling.
+xenofeindlich,,X,X,,,xenohostile,"xenohostile is defined as showing strong hostility or aggression toward foreigners, aliens, or anything perceived as foreign."
+xenophob,,X,X,,,xenophobic,Xenophobic is defined as having or showing a dislike or prejudice against people from other countries.

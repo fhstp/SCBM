@@ -1,0 +1,245 @@
+adjective_de,Counter Speech,Counter Hate,Hate Speech,Sentiment,Toxicity ,adjective
+beschimpfend,,X,X,,,abusive
+akzeptierend,X,,,,,accepting
+entgegenkommend,X,,,,,accommodating
+bewundernd,X,,,,,admiring
+altersdiskriminierend,,X,X,,,age discriminatory
+aggressiv,,X,X,,,aggressive
+amüsiert,X,X,X,,,amused
+belustigend,X,X,X,,,amusing
+verärgert,X,X,X,,,annoyed
+behindertenfeindlich,,X,X,,,anti-disabled
+antifeministisch,,X,X,,,anti-feminist
+antiziganistisch,,X,X,,,antigypsyist
+queerfeindlich,,X,X,,,anti-queer
+religionsfeindlich,,X,X,,,anti-religious
+antisemitisch,,X,X,,,anti-Semitic
+anerkennend,X,,,,,appreciative
+argumentativ,X,X,X,,,argumentative
+grausam,,X,X,,,awful
+ausbalancierend,X,,,,,balancing
+herabsetzend,,X,X,,,belittling
+bitter,,X,X,,,bitter
+bodyshamend,,X,X,,,body shaming
+mutig,X,,,,,brave
+brückenbauend,X,,,,,building bridges
+schikanierend,,X,X,,,bullying
+gelassen,X,,,,,calmly
+behutsam,X,,,,,carefully
+herausfordernd,X,X,X,,,challenging
+aggressionsgeladen,,X,X,,,charged with aggression
+chauvinistisch,,X,X,,,chauvinistic
+prüfend,X,,,,,checking
+engagiert,X,,,,,committed
+gemeinschaftsorientiert,X,,,,,community oriented
+versöhnlich,X,,,,,conciliatory
+beweiskräftig,X,,,,,conclusive
+verurteilend,X,X,X,,,condemning
+gewaltverurteilend,X,,,,,condemning violence
+herablassend,,X,X,,,condescending
+konfliktreich,,X,X,,,conflictual
+konfrontativ,X,X,X,,,confrontational
+rücksichtsvoll,X,,,,,considerate
+konstruktiv,X,,,,,constructive
+geringschätzend,,X,X,,,contemptuous
+widersprechend,X,,,,,contradictory
+zuwiderlaufend,X,X,,,,contrary
+kontrastierend,X,,,,,contrasting
+umstritten,,X,X,,,controversial
+überzeugend,X,,,,,convincing
+korrigierend,X,,,,,corrective
+kreativ,X,X,X,,,creative
+kritisch,X,X,,,,critical
+grenzüberschreitend,,X,X,,,cross-border
+neugierig,X,,,,,curious
+gefährlich,,X,X,,,dangerous
+verleumderisch,,X,X,,,defamatory
+verteidigend,X,,,,,defensive
+degradierend,,X,X,,,degrading
+entmenschlichend,,X,X,,,dehumanizing
+abwägend,x,x,,,,deliberative
+demokratisch,X,,,,,democratically
+abfällig,,X,X,,,derogatory
+verabscheuungswürdig,,X,X,,,despicable
+zerstörerisch,,X,X,,,destructive
+entwertend,,X,X,,,devaluing
+dialogorientiert,X,,,,,dialogue-oriented
+meinungsverschieden,X,X,X,,,different opinions
+differenzierend,X,,,,,differentiating
+diplomatisch,X,,,,,diplomatic
+enttäuscht,X,X,X,,,disappointed
+diskreditierend,,X,X,,,discreditable
+diskriminierend,,X,X,,,discriminatory
+diskutierend,X,,,,,discussing
+widerwärtig,,X,X,,,disgusting
+abweisend,X,X,X,,,dismissive
+respektlos,,X,X,,,disrespectful
+distanzierend,X,,,,,distancing
+sich distanzierend,X,,,,,distancing yourself
+unterscheidend,X,,,,,distinctive
+ablenkend,X,,X,,,distracting
+störend,,X,X,,,disturbing
+diversitätsbewusst,X,,,,,diversity conscious
+spaltend,,X,X,,,divisive
+erbaulich,X,,,,,edifying
+effektiv,X,,,,,effectively
+emanzipatorisch,X,,,,,emancipatory
+emotional,X,X,X,,,emotionally
+empathisch,X,,,,,empathetic
+aufmunternd,X,,,,,encouraging
+aufklärerisch,X,,,,,enlightening
+gleichberechtigt,X,,,,,Equal rights
+beweisführend,X,,,,,evidential
+ausgrenzend,,X,X,,,exclusionary
+bedenkenausdrückend,X,,,,,expressing concern
+ausdrucksstark,X,X,X,,,expressive
+extremistisch,,X,X,,,extremist
+faktenbasiert,X,,,,,fact-based
+faktenbezogen,X,,,,,factual
+fair,X,,,,,fair
+feministisch,X,,,,,feminist
+freundlich,X,,,,,friendly
+frustriert,X,X,X,,,frustrated
+lustig,X,X,X,,,funny
+geschlechterdiskriminierend,,X,X,,,gender discriminatory
+schadenfroh,,X,X,,,gleefully
+gewaltverherrlichend,,X,X,,,glorifying violence
+belästigend,,X,X,,,harassing
+schädlich,,X,X,,,harmful
+hasserfüllt,,X,X,,,hateful
+hilfsbereit,X,,,,,helpful
+homofeindlich,,X,X,,,homophobic
+anfeindend,,X,X,,,hostile
+minderheitenfeindlich,,X,X,,,hostile to minorities
+menschenfreundlich,X,,,,,humane
+erniedrigend,,X,X,,,humiliating
+humorvoll,X,X,X,,,humorous
+verletzend,,X,X,,,hurtful
+ignorant,,X,X,,,ignorant
+einwandsbereit,X,,,,,impeccable
+pietätlos,,X,X,,,impious
+unangemessen,,X,X,,,inappropriate
+gewaltaufrufend,,X,X,,,inciting violence
+unverständlich,X,X,X,,,incomprehensible
+hetzerisch,,X,X,,,inflammatory
+informierend,X,,,,,informative
+informiert,X,,,,,informed
+unmenschlich,,X,X,,,inhuman
+menschenverachtend,,X,X,,,inhumane
+nachfragend,X,,,,,inquiring
+unsensibel,,X,X,,,insensitive
+heimtückisch,,X,X,,,insidious
+einsichtsvoll,X,,,,,insightful
+schmähend,,X,X,,,insulting
+integrativ,X,,,,,integrative
+einschüchternd,,X,X,,,intimidating
+intolerant,,X,X,,,intolerant
+untersuchend,X,,,,,investigating
+unverantwortlich,,X,X,,,irresponsible
+islamfeindlich,,X,X,,,Islamophobic
+sachkundig,X,,,,,knowledgeable
+ettiketierend,,X,X,,,labeling
+objektiv ,X,,,,,lens
+bösartig,,X,X,,,malicious
+vermittelnd,X,,,,,mediating
+misanthropisch,,X,X,,,misanthropic
+misogyn,,X,X,,,misogynistic
+spöttisch,X,X,X,,,mockingly
+moderierend,X,,,,,moderating
+moralisierend,X,,,,,moralizing
+motivierend,X,,,,,motivating
+negativ,,X,X,,,negative
+neutralisierend,X,,,,,neutralizing
+gewaltfrei,X,,,,,non-violent
+nuanzierend,X,,,,,nuanced
+obszön,,X,X,,,obscene
+kränkend,,X,X,,,offending
+anstößig,,X,X,,,offensive
+aufgeschlossen,X,,,,,open minded
+unterdrückend,,X,X,,,oppressive
+optimistisch,X,,,,,optimistic
+empört,X,X,X,,,outraged
+empörend,x,X,X,,,outrageous
+überdenkend,X,,,,,overthinking
+leidenschaftlich,X,X,X,,,passionate
+passiv-aggressiv,,X,X,,,passive-aggressive
+erbärmlich,,X,X,,,pathetic
+geduldig,X,,,,,patient
+friedlich,X,,,,,peaceful
+beharrlich,X,X,X,,,persistently
+polemisch,,X,X,,,polemical
+höflich,X,,,,,polite
+positiv,X,,,,,positive
+hasspredigend,,X,X,,,preaching hate
+vorurteilsbehaftet,,X,X,,,prejudiced
+aggressionsfördernd,,X,X,,,promoting aggression
+demokratiefördernd,X,,,,,promoting democracy
+dialogfördernd,X,,,,,promoting dialogue
+toleranzfördernd,X,,,,,promoting tolerance
+provokativ,,X,X,,,provocative
+umsichtig,X,,,,,prudent
+hinterfragend,X,,,,,questioning
+rassistisch,,X,X,,,racist
+radikal,,X,X,,,radical
+rational,X,,,,,rational
+räsonnierend,X,,,,,reasoning
+vorurteilsabbauend,X,,,,,reducing prejudice
+reflexiv,X,,,,,reflexive
+widerlegend,X,,,,,refuting
+ablehnend,X,X,X,,,rejecting
+relativierend,X,X,X,,,relativizing
+verwerflich,,X,X,,,reprehensible
+abstoßend,,X,X,,,repulsive
+respektvoll,X,,,,,respectful
+achtungsvoll,X,,,,,respectfully
+respektierend,X,,,,,respecting
+umkehrend,X,,,,,reversing
+revidierend,X,,,,,revising
+widerrufend,X,,,,,revoking
+grob,,X,X,,,rough
+rücksichtslos,,X,X,,,ruthless
+sarkastisch,X,X,X,,,sarcastic
+satirisch,X,X,X,,,satirical
+einfühlsam,X,,,,,sensitive
+sensibilisiernd,X,,,,,sensitizing
+sexistisch,,X,X,,,sexist
+sexualisierend,,X,X,,,sexualizing
+beschämend,,X,X,,,shameful
+schamlos,,X,X,,,shameless
+scharfsinnig,X,,,,,sharp
+skeptisch,X,,,,,skeptical
+solidarisch,X,,,,,solidaric
+gehässig,,X,X,,,spiteful
+hassverbreitend,,X,X,,,spreading hate
+konfliktschürend,,X,X,,,stirring up conflict
+gemeinschaftsstärkend,X,,,,,strengthening the community
+zurückschlagend,,X,,,,striking back
+hartnäckig,X,X,X,,,stubborn
+unterstützend,X,,,,,supportive
+terrorisierend,,X,X,,,terrorizing
+denkanstoßend,X,,,,,thought-provoking
+bedrohend,,X,X,,,threatening
+tolerant,X,,,,,tolerant
+toxisch,,X,X,,,toxic
+transfeindlich,,X,X,,,transphobic
+inakzeptabel,,X,X,,,unacceptable
+unvoreingenommen,X,,,,,unbiased
+unzivilisiert,,X,X,,,uncivilized
+verständnisvoll,X,,,,,understanding
+unfair,,X,X,,,unfair
+unverzeihlich,,X,X,,,unforgivable
+unnötig,,X,X,,,unnecessary
+unangenehm,,X,X,,,unpleasant
+vorbehaltlos,X,,,,,unreservedly
+ungezügelt,,X,X,,,unrestrained
+unzufrieden,X,X,X,,,unsatisfied
+aufgeregt,X,X,X,,,upset
+stichhaltig,X,,,,,valid
+niederträchtig,,X,X,,,vile
+gewaltbereit,,X,X,,,violent
+vulgär,,X,X,,,vulgar
+warmherzig,X,,,,,warm-hearted
+abschwächend,X,X,X,,,weakening
+besorgt,X,,,,,worried
+xenofeindlich,,X,X,,,xenohostile
+xenophob,,X,X,,,xenophobic
