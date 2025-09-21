@@ -35,6 +35,6 @@ These notebooks implement ICL experiments where examples from training data are 
 - Calculates F1-macro scores across all iterations
 - Reports mean and standard deviation of performance
 
-- OpenAI API key in environment (`.env` file)
-- Python packages: `pandas`, `openai`, `scikit-learn`, `tqdm`
-- Access to training/test datasets in `../Tasks/` directory
+
+## Requirements
+- Environment variable `OPENAI_API_KEY` must be set.

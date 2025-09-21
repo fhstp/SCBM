@@ -1,13 +1,13 @@
 # Unified Parallel Batch Experiments
 
-Unified scripts for running parallel batch experiments on different datasets using OpenAI's batch API.
+Scripts for running parallel batch experiments on different datasets using OpenAI's batch API.
+
+> Note: For each experiment 5 runs are made to account for variability in LLM outputs and do majority voting. These runs outputs are saved in separate files so that when all parallel calls are completed the predictions can be aggregated.
 
 ## Scripts
 
 - `batch_parallel_unified.py` - For conan, elf22, germeval, hscs datasets (multiple iterations)
 - `batch_tsnh_unified.py` - For TSNH dataset (cross-validation folds)
-
-## Usage
 
 ### Standard Datasets (conan, elf22, germeval, hscs)
 
@@ -23,5 +23,5 @@ python "ICL & CoT experiments/CoT-python/batch_tsnh_unified.py" --output_dir "/h
 
 ## Requirements
 
-- OpenAI API key in environment or `.env` file
-- Python packages: `pandas`, `scikit-learn`, `openai`, `fire`
+- Environment variable `OPENAI_API_KEY` must be set.
+

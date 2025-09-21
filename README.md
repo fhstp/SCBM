@@ -1,45 +1,66 @@
 # SCBM
 Official repository for the paper "Distilling Knowledge from Large Language Models: A Concept Bottleneck Model for Hate and Counter Speech Recognition", in which we propose Speech Concept Bottleneck Models (SCBMs), a novel approach for automated hate and counter speech recognition.
 
-🔗 Link to paper: tbd
+✨ SCBM brings interpretability to hate and counter speech recognition by routing decisions through human-readable adjective concepts.
 
-🔗 Link to preprint: tbd
+🔗 Paper: https://www.sciencedirect.com/science/article/pii/S030645732500250X
 
-# Adjectival Feature Analysis for Abuse Detection
-
-
-A research source code investigating adjective-based feature analysis for hate speech detection and counter speech classification using transformer models and a proposed  `Speech Concept Bottleneck Model (SCBM)`. 
+## Repository index
+- Adjective tools
+  - ✨ Adjective generation: [AdjectiveSetGeneration](./AdjectiveSetGeneration/README.md)
+  - 📖 Adjective definitions: [AdjectiveDefinition](./AdjectiveDefinition/README.md)
+- SCBM representations and models
+  - 🦙 LLaMA-based feature extraction: [Llama](./Llama/README.md)
+  - 🎯 SCBM and SCBM-T training: [SCBM(T)](./SCBM%28T%29/README.md)
+  - 🧪 Prompt/persona sensitivity: [prompt-sensitibity](./prompt-sensitibity/README.md)
+- Baselines and zero-shot
+  - ⚡ Transformer baselines: [Transformers_baseline](./Transformers_baseline/README.md)
+  - 🔎 Zero-shot (OpenAI/LLaMA): [zero-shot-evaluation](./zero-shot-evaluation/README.md)
+- 🧩 ICL & CoT experiments: [ICL & CoT experiments](./ICL%20&%20CoT%20experiments/README.md)
+- 🗂️ Datasets overview: [Tasks](./Tasks/README.md)
+  
 
 ## Table of Contents
-1. [Features](#features)
+1. [Quickstart](#quickstart)
 2. [Model Architecture](#model-architecture)
-3. [Repository Layout](#repository-layout)
+3. [Results](#results)
 4. [Training & Evaluation](#training--evaluation)
 5. [SCBM Representation Computation](#scbm-representation-computation)
 6. [Training and Evaluation of SCBM and SCBM-T](#training-and-evaluation-of-scbm-and-scbm-t)
 7. [Zero-shot Evaluation on GPT Family](#zero-shot-evaluation-on-gpt-family)
+8. [Citation](#citation)
 
+## Quickstart
 
-## Features
+Follow these steps to reproduce the main pipeline end-to-end.
 
-- **Multi-Dataset Support**: 
-  - GermEval 2018 (German offensive language) [no context]
-  - TSNH (Thou Shalt Not Hate - Italian counter speech) [no context]
-  - HS_CS (Hate Speech vs Counter Speech)
-  - CONAN (COunter NArratives)
-  - ELF22 (Empathetic Language for Fighting Hate 2022)
-  
-- **Model Architectures**:
-  - BERT-style transformers (`bert-base-german-cased`, `xlm-roberta-large`, etc.)
-  - Custom interpretable models with feature masking (SCBM)
-  - GPT-3.5/GPT-4/Llama3.1-8b-instruct zero-shot baselines
-  
-- **Key Functionalities**:
-  - Adjective-based feature importance analysis
-  - Feature sentitivity through Permutation importance calculations
-  - Attention mask visualization to offer prediction interpretations
-  - Prompt sensitivity studies, to evaluate the impact of the personas when computing SCBM representation
-  - Cross-dataset performance evaluation
+1) Install dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+2) Compute SCBM features with LLaMA (writes .pickle next to CSV):
+
+```bash
+set -x HF_USER your-username
+set -x HF_TOKEN your-token
+python Llama/main.py \
+  --input_files ./Tasks/germeval/train.csv \
+  --use_context false \
+  --adjectives_file ./AdjectiveSetGeneration/adjectives.csv
+```
+
+3) Train SCBM variants:
+
+```bash
+# SCBM (HS_CS)
+python "SCBM(T)/SCBM.py" \
+  --train_file_name ./Tasks/hs_cs/train.csv \
+  --test_file_name ./Tasks/hs_cs/test.csv \
+  --use_regularization false \
+  --output_dir ./SCBM(T)
+```
 
 ## Model Architecture
 
@@ -47,204 +68,475 @@ SCBM is designed for hate and counter speech recognition by integrating human-in
 
 ![alt text](assets/model.png)
 
-SCBM leverages adjectives-based represetation as semantically meaningful bottleneck concepts derived probabilistically from LLMs, then classifies texts via a transparent, light-weight classifier that learns to prioritize key adjectives. This results in competitive hate and counter speech recognition performance with strong interpretability compared to black-box transformer models.
-In this repository, files are named `Mc` referencing to `SCBM` and `Mb` referencing to `SCBM-T` which are described in the paper submitted to IPM. In the same way `Mc-L` make reference to the regularized version of `SCBM`, i.e., `SCBM-R`.
+SCBM leverages adjectives-based representation as semantically meaningful bottleneck concepts derived probabilistically from LLMs, then classifies texts via a transparent, lightweight classifier that learns to prioritize key adjectives. This results in competitive hate and counter speech recognition performance with strong interpretability compared to black-box transformer models.
 
-## Repository Layout
+## Results
 
-```text
-.
-├── README.md                          # Main readme for repository overview
-├── adjectives_sortd_en.csv            # CSV data file (adjectives sorted)
-├── probabilities.ipynb               # Jupyter notebook, likely for probabilistic analysis
-├── conan                            # Directory with pickle models & scripts (likely ML models)
-│   ├── inference_L31_zero_context.py  # Script for zero-context inference (social psychology model)
-│   ├── main_transformers.py           # Transformer-related main script within conan to run model training and inference with baseline
-│   ├── train.csv                      # Training dataset CSV
-│   ├── test.csv                      # Test dataset CSV
-│   ├── *.pickle                      # Pickle files for models, datasets, or intermediate data
-│   └── llm            
-│       └── models.py                 # Model definitions, training and evaluation functions for transformer baseline  for connan dataset            
-│
-├── elf22                           # Similar structure to conan, another model/data set repository
-│   ├── inference_L31_zero_context.py # Similar inference script for elf22 dataset/model
-│   ├── main_transformers.py          # Main transformer script specific to elf22 to run model training and inference with baseline
-│   ├── train.csv                      # Training dataset CSV
-│   ├── test.csv                      # Test dataset CSV
-│   ├── *.pickle                      # Pickle files for models, datasets, or intermediate data
-│   └── llm            
-│       └── models.py                 # Model definitions, training and evaluation functions for transformer baseline  for elf22 dataset     
-│
-├── hs_cs                          # Another project/dataset folder, presumably related to Hate Speech Classification
-│   ├── inference_L31_zero_context.py # Inference script for zero context
-│   ├── main_transformers.py       #Main transformers script to run model training and inference with baseline
-│   ├── datasets, pickles          # CSV data and pickle files for training/testing
-│   ├── train.csv                      # Training dataset CSV
-│   ├── test.csv                      # Test dataset CSV
-│   ├── *.pickle                      # Pickle files for models, datasets, or intermediate data
-│   └── llm            
-│       └── models.py                 # Model definitions, training and evaluation functions for transformer baseline  for hs_cs dataset 
-│
-├── germeval                    # Germeval dataset related files and models
-│   ├── inference_L31_zero_nocontext.py # Inference script for Germeval dataset to compute scbm representation
-│   ├── train.csv                      # Training dataset CSV
-│   ├── test.csv                      # Test dataset CSV
-│   ├── *.pickle                      # Pickle files for models, datasets, or intermediate data
-│   ├── main_transformers.py       # Main transformers script to run model training and inference with baseline
-│   └── llm            
-│       └── models.py                 # Model definitions, training and evaluation functions for transformer baseline  for hs_cs dataset 
-│
-├── tsnh                         # TSNH dataset and related scripts/models
-│   ├── inference_L31_zero_nocontext.py # Zero context inference script
-│   ├── main_transformers-thsn.py # Main transformer script for tsnh
-│   ├── TSNH_uniform.csv        # Uniform TSNH dataset CSV, here there is no train/test we use cross-validation instead to evaluate the model performance
-│   ├── *.pickle                      # Pickle files for models, datasets, or intermediate data
-│   └── llm            
-│       └── models.py          # Model definitions, training and evaluation functions for transformer baseline  for tsnh dataset 
-│
-├── features_sensitivity           # Feature sensitivity analysis scripts and data
-│   ├── Mc.py                    # Model and training scripts SCBM used to do inference and evaluate the feature sensitivity in the jupyter notebook
-│   ├── McL.py                   # Model and training scripts SCBM-R used to do inference and evaluate the feature sensitivity in the jupyter notebook
-│   ├── *.pdf, *.png, *.eps     # Feature visualizations for our IPM paper 
-│   ├── masks.ipynb               # Notebook for masks visualization to evaluate which are the relevant adjectives to the classifiacation
-│   ├── run1.py, run2.py          # Run scripts for experiments on connan and tsnh respectively
-│   ├── *.pt              # Model checkpoints for corresponding dataset and variants of the scbm
-│   ├── weights_germeval          # Model weights folder for Germeval dataset
-│   └── weights_tsnh              # Model weights folder for TSNH dataset when evaluating the impacto of using more or less features (adjectives, concepts) this is relate to experiment in section 5.4 of the IPM paper
-│
-├── prompt-sensitibity            # Experiments on prompt (persona) sensitivity with notebooks and data (Section 5.4 of IPM paper)
-│   ├── inference_L31.py          # Inference script with Llama 3.1 model on the prediction of adjectives probabilities
-│   ├── main_context.py,main_nocontext.py          # Script for model training with/wothout context while variating the representation resulting from inference_L31.py with different prompts.
-│   ├── main.ipynb                # Main analysis notebook
-│   ├── *.pdf, *.eps     # Feature visualizations for our IPM paper 
-│   └── *.csv        # Data files 
-│
-├── Mc+Mb                    # Various model scripts, mostly with Mc (SCBM) and Mb (SCBM-T) with and without regularization to run experiments in paralell with different datasets
-│   ├── Mb+L-tsnh.py, Mc+L-tsnh.py           # Training/inference script for Mb+L and Mc+L on tsnh dataset, this is particualrly different because requires cross-validation
-│   ├── Mb-tsnh.py, Mc-tsnh.py           # Training/inference script for Mb and Mc on tsnh dataset, this is particualrly different because requires cross-validation
-│   └─── Mc.py, Mb.py           # Model implementation scripts
-│
-├── Llama                        # LLaMA model and inference scripts using context (or not) to compute SCBM representations
-│   ├── inference_L31_context.py # LLaMA inference for datasets where instances have context
-│   ├── inference_L31_no_context.py # LLaMA inference where instances have no context
-│   ├── main_context.py          # Main script for LLaMA with context
-│   └── main_nocontext.py        # Main script for LLaMA without context
-│
-└── zero-shot                    # Zero-shot inference scripts with GPT models
-    ├── gpt3.5_context.py, gpt3.5_nocontext.py         # GPT-3.5 with context and no context inference script, the usage depends on the dataset
-    └── gpt4_context.py, gpt_nocontext.py          # GPT-4 with context and no context inference script, the usage depends on the dataset
+We summarize quantitative performance across datasets and show qualitative explanation examples. 
 
-```
+### Overall performance 
+
+Performance of all explored approaches in our paper across all employed datasets in terms of macro-$F_1$ score. The best-performing approach in each category is highlighted in italics, and the best-performing approach per dataset is highlighted in bold.
+
+<table border="1">
+  <thead>
+    <tr>
+      <th rowspan="2" style="text-align:center;"></th>
+      <th colspan="2" rowspan="2" style="text-align:left;">Method</th>
+      <th colspan="5" style="text-align:center;">Dataset</th>
+    </tr>
+    <tr>
+      <th style="text-align:left;">GermEval</th>
+      <th style="text-align:left;">ELF22</th>
+      <th style="text-align:left;">HS-CS</th>
+      <th style="text-align:left;">CONAN</th>
+      <th style="text-align:left;">TSNH</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td></td>
+      <td colspan="2" style="text-align:left;">Random</td>
+      <td style="text-align:left;">0.488</td>
+      <td style="text-align:left;">0.515</td>
+      <td style="text-align:left;">0.347</td>
+      <td style="text-align:left;">0.109</td>
+      <td style="text-align:left;">0.503</td>
+    </tr>
+    <tr>
+      <td rowspan="5" style="text-align:center;">I</td>
+      <td colspan="2" style="text-align:left;">SVM</td>
+      <td style="text-align:left;"><i>0.648<sub>&plusmn;0.000</sub></i></td>
+      <td style="text-align:left;">0.553<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;"><i>0.426<sub>&plusmn;0.000</sub></i></td>
+      <td style="text-align:left;">0.364<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;"><i>0.696<sub>&plusmn;0.007</sub></i></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">LR</td>
+      <td style="text-align:left;">0.586<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;"><i>0.556<sub>&plusmn;0.000</sub></i></td>
+      <td style="text-align:left;">0.413<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.322<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.693<sub>&plusmn;0.007</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">RF</td>
+      <td style="text-align:left;">0.535<sub>&plusmn;0.009</sub></td>
+      <td style="text-align:left;">0.531<sub>&plusmn;0.027</sub></td>
+      <td style="text-align:left;">0.323<sub>&plusmn;0.014</sub></td>
+      <td style="text-align:left;">0.259<sub>&plusmn;0.005</sub></td>
+      <td style="text-align:left;">0.689<sub>&plusmn;0.005</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">GB</td>
+      <td style="text-align:left;">0.571<sub>&plusmn;0.002</sub></td>
+      <td style="text-align:left;">0.547<sub>&plusmn;0.027</sub></td>
+      <td style="text-align:left;">0.374<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.368<sub>&plusmn;0.005</sub></td>
+      <td style="text-align:left;">0.668<sub>&plusmn;0.008</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">MLP</td>
+      <td style="text-align:left;">0.648<sub>&plusmn;0.003</sub></td>
+      <td style="text-align:left;">0.542<sub>&plusmn;0.010</sub></td>
+      <td style="text-align:left;">0.398<sub>&plusmn;0.003</sub></td>
+      <td style="text-align:left;"><i>0.386<sub>&plusmn;0.011</sub></i></td>
+      <td style="text-align:left;">0.672<sub>&plusmn;0.005</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="10" style="text-align:center;">II</td>
+      <td rowspan="2" style="text-align:left;">SVM</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.695<sub>&plusmn;0.029</sub></td>
+      <td style="text-align:left;">0.356<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.504<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.593<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.637<sub>&plusmn;0.090</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;"><i>0.779<sub>&plusmn;0.000</sub></i></td>
+      <td style="text-align:left;">0.669<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;"><i>0.577<sub>&plusmn;0.000</sub></i></td>
+      <td style="text-align:left;">0.602<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.724<sub>&plusmn;0.010</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">LR</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.693<sub>&plusmn;0.029</sub></td>
+      <td style="text-align:left;">0.356<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.504<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.593<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.646<sub>&plusmn;0.093</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.777<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.671<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;"><i>0.577<sub>&plusmn;0.000</sub></i></td>
+      <td style="text-align:left;">0.602<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.723<sub>&plusmn;0.009</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">RF</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.689<sub>&plusmn;0.028</sub></td>
+      <td style="text-align:left;">0.646<sub>&plusmn;0.010</sub></td>
+      <td style="text-align:left;">0.466<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.394<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.604<sub>&plusmn;0.010</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.757<sub>&plusmn;0.004</sub></td>
+      <td style="text-align:left;"><i>0.671<sub>&plusmn;0.003</sub></i></td>
+      <td style="text-align:left;">0.487<sub>&plusmn;0.009</sub></td>
+      <td style="text-align:left;">0.486<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.719<sub>&plusmn;0.005</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">GB</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.729<sub>&plusmn;0.019</sub></td>
+      <td style="text-align:left;">0.561<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.500<sub>&plusmn;0.001</sub></td>
+      <td style="text-align:left;">0.481<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.642<sub>&plusmn;0.092</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.766<sub>&plusmn;0.000</sub></td>
+      <td style="text-align:left;">0.577<sub>&plusmn;0.001</sub></td>
+      <td style="text-align:left;">0.562<sub>&plusmn;0.002</sub></td>
+      <td style="text-align:left;">0.534<sub>&plusmn;0.002</sub></td>
+      <td style="text-align:left;">0.721<sub>&plusmn;0.006</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">MLP</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.743<sub>&plusmn;0.017</sub></td>
+      <td style="text-align:left;">0.396<sub>&plusmn;0.079</sub></td>
+      <td style="text-align:left;">0.481<sub>&plusmn;0.011</sub></td>
+      <td style="text-align:left;"><i>0.627<sub>&plusmn;0.011</sub></i></td>
+      <td style="text-align:left;">0.640<sub>&plusmn;0.096</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.762<sub>&plusmn;0.018</sub></td>
+      <td style="text-align:left;">0.654<sub>&plusmn;0.017</sub></td>
+      <td style="text-align:left;">0.556<sub>&plusmn;0.014</sub></td>
+      <td style="text-align:left;">0.618<sub>&plusmn;0.018</sub></td>
+      <td style="text-align:left;"><i>0.728<sub>&plusmn;0.007</sub></i></td>
+    </tr>
+    <tr>
+      <td rowspan="4" style="text-align:center;">III</td>
+      <td colspan="2" style="text-align:left;">XLM-RoBERTa-base</td>
+      <td style="text-align:left;">0.747<sub>&plusmn;0.017</sub></td>
+      <td style="text-align:left;">0.645<sub>&plusmn;0.018</sub></td>
+      <td style="text-align:left;">0.524<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.729<sub>&plusmn;0.016</sub></td>
+      <td style="text-align:left;">0.747<sub>&plusmn;0.013</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">BERT-base</td>
+      <td style="text-align:left;">0.654<sub>&plusmn;0.040</sub></td>
+      <td style="text-align:left;">0.670<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.543<sub>&plusmn;0.004</sub></td>
+      <td style="text-align:left;">0.721<sub>&plusmn;0.022</sub></td>
+      <td style="text-align:left;">0.752<sub>&plusmn;0.022</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">XLM-RoBERTa-large</td>
+      <td style="text-align:left;"><i>0.786<sub>&plusmn;0.004</sub></i></td>
+      <td style="text-align:left;">0.680<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;"><i>0.572<sub>&plusmn;0.021</sub></i></td>
+      <td style="text-align:left;">0.746<sub>&plusmn;0.020</sub></td>
+      <td style="text-align:left;"><b>0.781<sub>&plusmn;0.009</sub></b></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">BERT-large</td>
+      <td style="text-align:left;">0.676<sub>&plusmn;0.014</sub></td>
+      <td style="text-align:left;"><i>0.683<sub>&plusmn;0.009</sub></i></td>
+      <td style="text-align:left;">0.545<sub>&plusmn;0.011</sub></td>
+      <td style="text-align:left;">0.744<sub>&plusmn;0.007</sub></td>
+      <td style="text-align:left;">0.773<sub>&plusmn;0.008</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="5" style="text-align:center;">IV</td>
+      <td colspan="2" style="text-align:left;">GPT 3.5</td>
+      <td style="text-align:left;">0.686<sub>&plusmn;0.003</sub></td>
+      <td style="text-align:left;">0.469<sub>&plusmn;0.078</sub></td>
+      <td style="text-align:left;">0.247<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.291<sub>&plusmn;0.067</sub></td>
+      <td style="text-align:left;">0.508<sub>&plusmn;0.022</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">GPT 4o</td>
+      <td style="text-align:left;">0.833<sub>&plusmn;0.025</sub></td>
+      <td style="text-align:left;">0.500<sub>&plusmn;0.039</sub></td>
+      <td style="text-align:left;">0.267<sub>&plusmn;0.014</sub></td>
+      <td style="text-align:left;">0.361<sub>&plusmn;0.140</sub></td>
+      <td style="text-align:left;">0.560<sub>&plusmn;0.017</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">GPT 4o (ICL)</td>
+      <td style="text-align:left;"><b>0.854<sub>&plusmn;0.002</sub></b></td>
+      <td style="text-align:left;"><i>0.651<sub>&plusmn;0.005</sub></i></td>
+      <td style="text-align:left;"><i>0.390<sub>&plusmn;0.006</sub></i></td>
+      <td style="text-align:left;"><b>0.763<sub>&plusmn;0.007</sub></b></td>
+      <td style="text-align:left;"><i>0.642<sub>&plusmn;0.026</sub></i></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">GPT o3-mini (CoT)</td>
+      <td style="text-align:left;">0.666<sub>&plusmn;0.165</sub></td>
+      <td style="text-align:left;">0.606<sub>&plusmn;0.004</sub></td>
+      <td style="text-align:left;">0.301<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.542<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.503<sub>&plusmn;0.009</sub></td>
+    </tr>
+    <tr>
+      <td colspan="2" style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.700<sub>&plusmn;0.112</sub></td>
+      <td style="text-align:left;">0.510<sub>&plusmn;0.013</sub></td>
+      <td style="text-align:left;">0.270<sub>&plusmn;0.018</sub></td>
+      <td style="text-align:left;">0.203<sub>&plusmn;0.017</sub></td>
+      <td style="text-align:left;">0.438<sub>&plusmn;0.081</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="8" style="text-align:center;">V</td>
+      <td rowspan="2" style="text-align:left;">HSCBM</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.746<sub>&plusmn;0.004</sub></td>
+      <td style="text-align:left;">0.673<sub>&plusmn;0.007</sub></td>
+      <td style="text-align:left;">0.536<sub>&plusmn;0.005</sub></td>
+      <td style="text-align:left;">0.616<sub>&plusmn;0.011</sub></td>
+      <td style="text-align:left;">0.705<sub>&plusmn;0.013</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;"><i>0.781<sub>&plusmn;0.003</sub></i></td>
+      <td style="text-align:left;"><b>0.693<sub>&plusmn;0.011</sub></b></td>
+      <td style="text-align:left;"><b>0.581<sub>&plusmn;0.008</sub></b></td>
+      <td style="text-align:left;">0.630<sub>&plusmn;0.006</sub></td>
+      <td style="text-align:left;">0.739<sub>&plusmn;0.008</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">HSCBM-R</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.745<sub>&plusmn;0.002</sub></td>
+      <td style="text-align:left;">0.638<sub>&plusmn;0.027</sub></td>
+      <td style="text-align:left;">0.523<sub>&plusmn;0.004</sub></td>
+      <td style="text-align:left;">0.611<sub>&plusmn;0.011</sub></td>
+      <td style="text-align:left;">0.705<sub>&plusmn;0.009</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.779<sub>&plusmn;0.002</sub></td>
+      <td style="text-align:left;">0.683<sub>&plusmn;0.006</sub></td>
+      <td style="text-align:left;">0.574<sub>&plusmn;0.010</sub></td>
+      <td style="text-align:left;">0.610<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.735<sub>&plusmn;0.008</sub></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">HSCBMT</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.766<sub>&plusmn;0.004</sub></td>
+      <td style="text-align:left;">0.658<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.542<sub>&plusmn;0.016</sub></td>
+      <td style="text-align:left;"><i>0.723<sub>&plusmn;0.016</sub></i></td>
+      <td style="text-align:left;">0.709<sub>&plusmn;0.104</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.768<sub>&plusmn;0.009</sub></td>
+      <td style="text-align:left;">0.685<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.551<sub>&plusmn;0.013</sub></td>
+      <td style="text-align:left;">0.714<sub>&plusmn;0.016</sub></td>
+      <td style="text-align:left;"><i>0.763<sub>&plusmn;0.011</sub></i></td>
+    </tr>
+    <tr>
+      <td rowspan="2" style="text-align:left;">HSCBMT-R</td>
+      <td style="text-align:left;">Llama 2</td>
+      <td style="text-align:left;">0.757<sub>&plusmn;0.009</sub></td>
+      <td style="text-align:left;">0.637<sub>&plusmn;0.003</sub></td>
+      <td style="text-align:left;">0.526<sub>&plusmn;0.023</sub></td>
+      <td style="text-align:left;">0.710<sub>&plusmn;0.013</sub></td>
+      <td style="text-align:left;">0.710<sub>&plusmn;0.107</sub></td>
+    </tr>
+    <tr>
+      <td style="text-align:left;">Llama 3.1</td>
+      <td style="text-align:left;">0.769<sub>&plusmn;0.008</sub></td>
+      <td style="text-align:left;">0.666<sub>&plusmn;0.012</sub></td>
+      <td style="text-align:left;">0.540<sub>&plusmn;0.011</sub></td>
+      <td style="text-align:left;">1.710<sub>&plusmn;0.009</sub></td>
+      <td style="text-align:left;">0.760<sub>&plusmn;0.006</sub></td>
+    </tr>
+  </tbody>
+  </table>
+
+### Example explanations (HS-CS)
+
+Top-10 most relevant adjectives for individual input samples from each class of the HS-CS dataset provided by SCBM. For comparison, we provide LIME explanations for the same samples generated from the fine-tuned XLM-RoBERTa model.
+
+<table class="styled-table">
+  <thead>
+  <tr>
+    <th>Class</th>
+    <th>Input</th>
+    <th>Adjectives</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr>
+    <td><strong>Counter-speech</strong></td>
+    <td>
+    <strong>CONTEXT:</strong> From <span style="background-color: #e6f2ef;">what</span> I <span style="background-color: #b3d1ca;">read</span> the <span style="background-color: #e6f2ef;">movie</span> <span style="background-color: #80ada2;">is</span> severely <span style="background-color: #ccd9d5;">inaccurrate</span> <span style="background-color: #e6f2ef;">and</span> the only redeeming feature <span style="background-color: #80ada2;">is</span> <span style="background-color: #bfccc9;">Rami</span> Maleks performance.<br>
+    <strong>COMMENT:</strong> I wasn't <span style="background-color: #e6f2ef;">familiar</span> <span style="background-color: #e6f2ef;">enough</span> <span style="background-color: #c6d6d2;">with</span> Queen to spot the <span style="background-color: #d9e6e2;">inaccuracies</span>, so I <span style="background-color: #99c2b8;">enjoyed</span> <span style="background-color: #e6f2ef;">it</span> a <span style="background-color: #e6f2ef;">ton</span>.
+    </td>
+    <td class="adjective-list">
+    differentiating, moderating,<br>
+    conciliatory, amused,<br>
+    promoting, admiring,<br>
+    exclusionary, respectfully,<br>
+    balancing, emotionally
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Hate Speech</strong></td>
+    <td>
+    <strong>CONTEXT:</strong> Damn, this is some <span style="background-color: #d1c8e8;">cringey</span> <span style="background-color: #d4cde9;">neckbeard</span> shit Y'all <span style="background-color: #ebe5f6;">lived</span> up <span style="background-color: #ebe5f6;">to my</span> expectations and didn't disappoint hit me up <span style="background-color: #ebe5f6;">if</span> you <span style="background-color: #ebe5f6;">wanna</span> know how <span style="background-color: #ebe5f6;">a</span> <span style="background-color: #d8d0ec;">vagina</span> feels<br>
+    <strong>COMMENT:</strong> You’re <span style="background-color: #ebe5f6;">a</span> fucking <span style="background-color: #e0dbf1;">retard</span>
+    </td>
+    <td class="adjective-list">
+    hurtful, gender discriminatory,<br>
+    inappropriate, unacceptable,<br>
+    exclusionary, hostile,<br>
+    disrespectful, abusive,<br>
+    insensitive, sexist
+    </td>
+  </tr>
+  <tr>
+    <td><strong>Neutral Speech</strong></td>
+    <td>
+    <strong>CONTEXT:</strong> Almost no <span style="background-color: #f4f3f5;">one</span> on <span style="background-color: #f8f7f9;">a</span> train <span style="background-color: #fbfbfb;">or</span> <span style="background-color: #f8f7f9;">subway</span> is displaying <span style="background-color: #f4f3f5;">dominance</span>. <span style="background-color: #a5a2a9;">You</span> <span style="background-color: #f4f3f5;">are just</span> <span style="background-color: #f0eff1;">looking</span> for <span style="background-color: #f9f9fa;">a</span> <span style="background-color: #a5a2a9;">dumb</span> <span style="background-color: #ecebed;">debate</span>.<br>
+    <strong>COMMENT:</strong> <span style="background-color: #a5a2a9;">You</span> <span style="background-color: #f4f3f5;">my</span> <span style="background-color: #f9f9fa;">friend</span> have <span style="background-color: #ecebed;">never</span> <span style="background-color: #f4f3f5;">been</span> on <span style="background-color: #f4f3f5;">the red</span> line in Chicago <span style="background-color: #f4f3f5;">south</span> of <span style="background-color: #f4f3f5;">Roosevelt</span>.
+    </td>
+    <td class="adjective-list">
+    worried,<br>
+    refuting, condescending,<br>
+    unfair, impious,<br>
+    conciliatory, exclusionary,<br>
+    expressing concern,<br>
+    unnecessary, insulting
+    </td>
+  </tr>
+  </tbody>
+  </table>
 
 ## Training & Evaluation
 
-Each dataset folder (`conan`, `elf22`, `germeval`, `hs_cs`, `tsnh`) contains two main scripts: `main_transformer.py` and `inference_L31_zero_context.py`. The former is responsible for training the models, while the latter is used for inference in a zero-shot manner using [`Llama-3.1-8b-instruct`](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct).
+Transformer baselines are provided in `Transformers_baseline/` and operate over the CSVs under `Tasks/`.
 
-Each `main_transformer.py` follows a common structure, adapted only to the specific characteristics of its corresponding dataset. The general workflow starts with the manual definition of four Transformer models, selected as baselines in the paper published in *Information Processing & Management (IPM)*: [`FacebookAI/xlm-roberta-base`](https://huggingface.co/FacebookAI/xlm-roberta-base), [`FacebookAI/xlm-roberta-large`](https://huggingface.co/FacebookAI/xlm-roberta-large), [`google-bert/bert-base-uncased`](https://huggingface.co/google-bert/bert-base-uncased), [`google-bert/bert-large-uncased`](https://huggingface.co/google-bert/bert-large-uncased). For each of these models, five independent training runs are performed, followed by evaluations to obtain the average performance and standard deviation. Finally, the results are serialized and saved in `.pickle` files for later analysis. They can be runned by performing the following command according to the dataset:
+- Baselines (train/dev split): `run_transformers.py`
+- Baselines (5-fold CV, e.g., TSNH): `run_transformers-crossval.py`
 
-```bash
-cd elf22
-python main_transformer.py
-```
-
-Similarly to run the zero-shot inference it should be done:
-
+Examples:
 
 ```bash
-cd elf22
-python inference_L31_zero_context.py
+# ELF22 split
+python Transformers_baseline/run_transformers.py \
+  --train_file ./Tasks/elf22/train.csv \
+  --dev_file ./Tasks/elf22/test.csv \
+  --output_file ./Transformers_baseline/elf22_baselines.pickle
+
+# TSNH cross-validation
+python Transformers_baseline/run_transformers-crossval.py \
+  --train_file ./Tasks/tsnh/TSNH_uniform.csv \
+  --output_file ./Transformers_baseline/tsnh_cv_baselines.pickle
 ```
 
 ## SCBM Representation Computation
 
-The `Lama` folder contains the inference and training logic to compute representations for the Speech Concept Bottleneck Model (SCBM) representation using the [`Llama-3.1-8b-instruct`](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct) model. 
+Use `Llama/main.py` to compute SCBM adjective-probability representations with [`Llama-3.1-8B-Instruct`](https://huggingface.co/meta-llama/Llama-3.1-8B-Instruct). The script reads one or more CSVs from `Tasks/` and writes a sibling `.pickle` with `id`, `values` (probability vectors), and `text` (for no-context runs).
 
-The scripts `inference_L31_context.py` and `inference_L31_nocontext.py` are responsible for loading pretrained models and generating representations with and without context, respectively (depending on the dataset processed). The files `main_context.py` and `main_nocontext.py` coordinate the inference process by calling the inference scripts to extract the necessary representations for the SCBM experiments.
-Notice the dataset should be specified in the corresponding `main_*.py` file by editing it. Finally to run the computation only the following command needs to be run:
+Environment (first run clones the model):
 
 ```bash
-cd Llama
-python main_nocontext.py
+set -x HF_USER your-username
+set -x HF_TOKEN your-token
 ```
 
-> **Note:**
-> When processing a dataset with contextual information `main_nocontext.py` shall be run. Also notice the first time this opration may be slow at the beginning becasue the model needs to be downloaded.
+Examples:
+
+```bash
+# No-context (e.g., GermEval)
+python Llama/main.py \
+  --input_files ./Tasks/germeval/test.csv \
+  --use_context false \
+  --adjectives_file ./AdjectiveSetGeneration/adjectives.csv \
+  --repository meta-llama/Llama-3.1-8B-Instruct \
+  --batch_size 244
+
+# Context (e.g., HS_CS)
+python Llama/main.py \
+  --input_files "[\"./Tasks/hs_cs/train.csv\", \"./Tasks/hs_cs/test.csv\"]" \
+  --use_context true \
+  --adjectives_file ./AdjectiveSetGeneration/adjectives.csv
+```
 
 # Training and Evaluation of SCBM and SCBM-T
 
-The `Mc+Mb` folder contains scripts used to train and evaluate the proposed SCMB (Speech Concept Bottleneck Models) on the datasets. The files `Mb.py` (`SCBM-T`) and `Mc.py` (`SCBM`) correspond to two independent variants of the model, each of which can be run directly from the command line using Python. Each script performs five training runs with their respective evaluations to calculate the mean and standard deviation of the results. This procedure reproduces the performance reported in the published *Information Processing & Management (IPM)* paper.
+SCBM variants live in `SCBM(T)/`:
+- `SCBM.py`: classifier over adjective-probability features
+- `SCBMT.py`: text + features fusion variant
 
-Model weights are automatically saved in a local directory defined inside each script as a `*.pt` file, along with evaluation results serialized as `.pickle`. Below is a basic example of how to run each variant:
+These scripts expect the `.pickle` feature files created by the `Llama` step (same basename as the CSV, e.g., `train.csv.pickle`).
 
-```bash
-
-#change to the correct directory
-cd Mc+Mb
-
-# Train and evaluate the Model Bottleneck variant
-python Mb.py
-
-# Train and evaluate the Model Concept variant
-python Mc.py
-```
-### Special case: TSNH dataset
-
-For the TSNH dataset, which does not have predefined training, validation, and test splits, the Mb-tsnh.py and Mc-tsnh.py scripts implement a cross-validation scheme. The splits are generated internally and kept consistent across the five training repetitions.
-
-### Regularized variant: +L (SCBM-R)
-
-To improve model interpretability, regularized versions of each variant are included under the names pluseL.py. These versions add penalties to the model aiming to produce more interpretable and structured representations without sacrificing predictive performance. Their usage is identical:
+Examples:
 
 ```bash
-# Train and evaluate the regularized Model Bottleneck variant
-python Mb+L.py
+# SCBM (features only)
+python "SCBM(T)/SCBM.py" \
+  --train_file_name ./Tasks/hs_cs/train.csv \
+  --test_file_name ./Tasks/hs_cs/test.csv \
+  --use_regularization false \
+  --output_dir ./SCBM(T)
 
-# Train and evaluate the regularized Model Concept variant
-python Mc+L.py
+# SCBM-T (text + features)
+python "SCBM(T)/SCBMT.py" \
+  --train_file_name ./Tasks/hs_cs/train.csv \
+  --test_file_name ./Tasks/hs_cs/test.csv \
+  --use_regularization false \
+  --output_dir ./SCBM(T)
 ```
-
-#### Customization and Configuration
-
-The training scripts (`Mb.py`, `Mc.py`, `Mb+L.py`, `Mc+L.py`) contain hardcoded parameters and file paths that need to be adjusted directly within the script before execution. Key customizable elements typically include:
-
-- **Dataset file paths** for training and testing CSV files:
-  ```python
-  train_file_name = '../hs_cs/train.csv'
-  test_file_name = '../hs_cs/test.csv'
-  ```
-- **Output directories and filenames** for saving model weights and evaluation results:
-  ```python
-  output = '.'  # Directory to save weights
-  output_name = 'Mc'  # Prefix for saved model weights (e.g., Mc.pt)
-  results_pickle_path = '../hs_cs/Mc.pickle'  # Path to save evaluation metrics
-  ```
-
-- **Model hyperparameters**, such as number of epochs, batch size, learning rate, and hidden layer size:
-
-  ```python
-  epoches = 250
-  batch_size = 128
-  interm_layer_size = 128
-  lr = 2e-3
-  decay = 1e-6
-  ```
 
 
 ## Zero-shot Evaluation on GPT Family
+Zero-shot baselines live in `zero-shot-evaluation/` and support both OpenAI Chat Completions and local LLaMA-3.1.
 
-The `Zero Shoot` folder contains scripts used for evaluating GPT models in zero-shot mode. It includes files for GPT-3.5 and GPT-4, each with **Context** and **No Context** versions, depending on whether the task includes context or not.
+Scripts
+- `openai-zero-shot.py`: Uses OpenAI Chat Completions. Model is configurable (e.g., `gpt-3.5-turbo`, `chatgpt-4o-latest`).
+- `llama-zero-shot.py`: Uses a local pipeline for `meta-llama/Llama-3.1-8B-Instruct`.
 
-Each script runs four inference passes per instance, sending requests to the GPT model to obtain predictions for the specific task. Then, a majority voting system is applied to determine the final prediction and to measure variability among GPT’s responses. The results are saved in files with the `.pickl` extension.
 
-Key parameters and file paths are hard-coded within the scripts, so any modifications require directly editing the source code.
+## Citation
 
-**Key aspects and handwritten configurations:**
+If you use this repository in your research, please cite:
 
-- **API client setup:** The OpenAI client is initialized with a hardcoded API key (`api_key`).
+```bibtex
+@article{distilling-scbm,
+title = {Distilling knowledge from large language models: A concept bottleneck model for hate and counter speech recognition},
+journal = {Information Processing & Management},
+volume = {63},
+number = {2, Part A},
+pages = {104309},
+year = {2026},
+issn = {0306-4573},
+doi = {https://doi.org/10.1016/j.ipm.2025.104309},
+url = {https://www.sciencedirect.com/science/article/pii/S030645732500250X},
+author = {Roberto Labadie-Tamayo and Djordje Slijepčević and Xihui Chen and Adrian Jaques Böck and Andreas Babic and Liz Freimann and Christiane Atzmüller and Matthias Zeppelzauer},
+}
+```
 
-- **Prompt definition:** 
-  - The output is restricted to one of seven single-word categories: `"denouncing"`, `"hypocrisy"`, `"question"`, `"unrelated"`, `"humor"`, `"facts"`, or `"support"`. This should change according to the assesed classes in the task dataset.
-
-- **Data input:** The script reads input data from a fixed CSV file path (`../conan/test.csv`), which contains columns for `id`, `text` (comment), and `context`.
-
-- **Result storage:** After each run, results are saved as a pickle file for further analysis.

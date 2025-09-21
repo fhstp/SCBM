@@ -71,7 +71,7 @@ def main(file_path: str, model: Literal["gpt-3.5-turbo", "chatgpt-4o-latest"]):
                 traceback.print_exc()
             runs[-1]['values'] += [prediction]
             runs[-1]['id'] += [ids[j]]
-        with open(f'{file_path}.gpt35.pickle', 'wb') as handle:
+        with open(f'{file_path}.{model}.pickle', 'wb') as handle:
             pickle.dump(runs, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 if __name__ == "__main__":

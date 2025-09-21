@@ -114,11 +114,20 @@ def matching_vs_gold_standard(gold_standard_file: str = "adjectives.csv",
 def main( output_file: str = "adjectives.csv",
           generation_iterations: int = 4,
           gold_standard_file: str = None) -> None:
+     
+     """Main function to generate adjectives and optionally compare with a gold standard file.
+     
+     :param output_file: The file to save the generated adjectives.
+     :param generation_iterations: Number of iterations for adjective generation.
+     :param gold_standard_file: Optional file containing gold standard adjectives for comparison.
+     
+     """
 
      generated_per_iteration = generate_adjectives(output_file=output_file,
                                                    iterations=generation_iterations)
-     matching_vs_gold_standard(gold_standard_file=gold_standard_file,
-                               generated_per_iteration=generated_per_iteration)
+     if gold_standard_file is not None:
+        matching_vs_gold_standard(gold_standard_file=gold_standard_file,
+                                generated_per_iteration=generated_per_iteration)
      
 
 if __name__ == "__main__":
