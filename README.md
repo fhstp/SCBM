@@ -380,60 +380,7 @@ Performance of all explored approaches in our paper across all employed datasets
 
 Top-10 most relevant adjectives for individual input samples from each class of the HS-CS dataset provided by SCBM. For comparison, we provide LIME explanations for the same samples generated from the fine-tuned XLM-RoBERTa model.
 
-<table class="styled-table">
-  <thead>
-  <tr>
-    <th>Class</th>
-    <th>Input</th>
-    <th>Adjectives</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr>
-    <td><strong>Counter-speech</strong></td>
-    <td>
-    <strong>CONTEXT:</strong> From <span style="background-color: #e6f2ef;">what</span> I <span style="background-color: #b3d1ca;">read</span> the <span style="background-color: #e6f2ef;">movie</span> <span style="background-color: #80ada2;">is</span> severely <span style="background-color: #ccd9d5;">inaccurrate</span> <span style="background-color: #e6f2ef;">and</span> the only redeeming feature <span style="background-color: #80ada2;">is</span> <span style="background-color: #bfccc9;">Rami</span> Maleks performance.<br>
-    <strong>COMMENT:</strong> I wasn't <span style="background-color: #e6f2ef;">familiar</span> <span style="background-color: #e6f2ef;">enough</span> <span style="background-color: #c6d6d2;">with</span> Queen to spot the <span style="background-color: #d9e6e2;">inaccuracies</span>, so I <span style="background-color: #99c2b8;">enjoyed</span> <span style="background-color: #e6f2ef;">it</span> a <span style="background-color: #e6f2ef;">ton</span>.
-    </td>
-    <td class="adjective-list">
-    differentiating, moderating,<br>
-    conciliatory, amused,<br>
-    promoting, admiring,<br>
-    exclusionary, respectfully,<br>
-    balancing, emotionally
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Hate Speech</strong></td>
-    <td>
-    <strong>CONTEXT:</strong> Damn, this is some <span style="background-color: #d1c8e8;">cringey</span> <span style="background-color: #d4cde9;">neckbeard</span> shit Y'all <span style="background-color: #ebe5f6;">lived</span> up <span style="background-color: #ebe5f6;">to my</span> expectations and didn't disappoint hit me up <span style="background-color: #ebe5f6;">if</span> you <span style="background-color: #ebe5f6;">wanna</span> know how <span style="background-color: #ebe5f6;">a</span> <span style="background-color: #d8d0ec;">vagina</span> feels<br>
-    <strong>COMMENT:</strong> You’re <span style="background-color: #ebe5f6;">a</span> fucking <span style="background-color: #e0dbf1;">retard</span>
-    </td>
-    <td class="adjective-list">
-    hurtful, gender discriminatory,<br>
-    inappropriate, unacceptable,<br>
-    exclusionary, hostile,<br>
-    disrespectful, abusive,<br>
-    insensitive, sexist
-    </td>
-  </tr>
-  <tr>
-    <td><strong>Neutral Speech</strong></td>
-    <td>
-    <strong>CONTEXT:</strong> Almost no <span style="background-color: #f4f3f5;">one</span> on <span style="background-color: #f8f7f9;">a</span> train <span style="background-color: #fbfbfb;">or</span> <span style="background-color: #f8f7f9;">subway</span> is displaying <span style="background-color: #f4f3f5;">dominance</span>. <span style="background-color: #a5a2a9;">You</span> <span style="background-color: #f4f3f5;">are just</span> <span style="background-color: #f0eff1;">looking</span> for <span style="background-color: #f9f9fa;">a</span> <span style="background-color: #a5a2a9;">dumb</span> <span style="background-color: #ecebed;">debate</span>.<br>
-    <strong>COMMENT:</strong> <span style="background-color: #a5a2a9;">You</span> <span style="background-color: #f4f3f5;">my</span> <span style="background-color: #f9f9fa;">friend</span> have <span style="background-color: #ecebed;">never</span> <span style="background-color: #f4f3f5;">been</span> on <span style="background-color: #f4f3f5;">the red</span> line in Chicago <span style="background-color: #f4f3f5;">south</span> of <span style="background-color: #f4f3f5;">Roosevelt</span>.
-    </td>
-    <td class="adjective-list">
-    worried,<br>
-    refuting, condescending,<br>
-    unfair, impious,<br>
-    conciliatory, exclusionary,<br>
-    expressing concern,<br>
-    unnecessary, insulting
-    </td>
-  </tr>
-  </tbody>
-  </table>
+![alt text](assets/table-expl-comparison.png)
 
 ## Training & Evaluation
 
