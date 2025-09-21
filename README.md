@@ -378,7 +378,7 @@ Performance of all explored approaches in our paper across all employed datasets
 
 ### Example explanations (HS-CS)
 
-Top-10 most relevant adjectives for individual input samples from each class of the HS-CS dataset provided by SCBM. For comparison, we provide LIME explanations for the same samples generated from the fine-tuned XLM-RoBERTa model.
+Top-10 most relevant adjectives for individual input samples from each class of the HS-CS dataset provided by SCBM. For comparison, we provide [LIME](https://medium.com/data-science/lime-explain-machine-learning-predictions-af8f18189bfe) explanations for the same samples generated from the fine-tuned XLM-RoBERTa model.
 
 ![alt text](assets/table-expl-comparison.png)
 
