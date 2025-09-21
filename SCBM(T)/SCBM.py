@@ -1,9 +1,6 @@
-#%%
 import os
 from collections import Counter
-# os.environ['PYTORCH_MPS_HIGH_WATERMARK_RATIO'] = '0'
-
- 
+from fire import Fire
   
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from transformers import AutoModel, AutoTokenizer, BloomForCausalLM
@@ -46,12 +43,11 @@ def seed_worker(worker_id):
 
 class Data(Dataset):
 
-  def __init__(self, data, mapping, class_map = None, feature_mask = None):
+  def __init__(self, data, mapping, class_map = None):
 
     self.data = data
     self.mapping = mapping
     self.class_map = class_map
-    self.feature_mask = feature_mask 
     
   def __len__(self):
     return len(self.data['Class'])
@@ -62,36 +58,58 @@ class Data(Dataset):
       idx = idx.tolist()
       
     ret = {key: self.data.iloc[idx][key] if key != 'Class' else self.class_map[self.data.iloc[idx][key]] for key in self.data.keys()}
-    if self.feature_mask is None:
-      ret['features'] = torch.tensor(self.mapping[ret['id']], dtype=torch.float32)
-    else: ret['features'] = torch.tensor(self.mapping[ret['id']][self.feature_mask], dtype=torch.float32)
-    # print(ret['features'].shape)
-    
-    # ret['text'] = self.data.iloc[idx]['text']   + " [SEP] " + self.data.iloc[idx]['context']      
- 
+    ret['features'] = torch.tensor(self.mapping[ret['id']], dtype=torch.float32)
+
+    # ret['text'] = self.data.iloc[idx]['text']      
+    ret['text'] = self.data.iloc[idx]['text']   + " [SEP] " + self.data.iloc[idx]['context']      
     return ret
    
-  
+
+class LossFunction(torch.nn.Module):
+
+  def __init__(self, classes_len):
+    super(LossFunction, self).__init__()
+    
+    self.loss = torch.nn.CrossEntropyLoss()
+    self.classes_len = classes_len
+
+      
+  def forward(self, outputs, labels, masks = None):
+
+    if masks is not None:
+      avg_mask = masks.mean(dim=-1)
+      z = [ torch.where(labels == i) for i in range(self.classes_len)]
+      avg_mask = torch.stack([avg_mask[i].mean( dim = -1) for i in z if len(i[0]) >= 1])
+      mask_loss = torch.prod(avg_mask, dim = -1).sum()
+
+      #add l2 norm
+      return self.loss(outputs, labels), mask_loss
+
+
+    return self.loss(outputs, labels)
+
 class SeqModel(torch.nn.Module):
 
-  def __init__(self, interm_size, classes_len, feature_size):
+  def __init__(self, interm_size, classes_len, use_regularization):
 
     super(SeqModel, self).__init__()
 		
     self.best_acc = None
-    self.max_length = 256
     self.interm_neurons = interm_size
     
-    self.normalize_features = torch.nn.LayerNorm(feature_size)
-    self.relevance_gate = torch.nn.Sequential(torch.nn.Linear(in_features=feature_size, out_features=feature_size), torch.nn.Sigmoid())
+    self.normalize_features = torch.nn.LayerNorm(244)
+    self.relevance_gate = torch.nn.Sequential(torch.nn.Linear(in_features=244, out_features=244), torch.nn.Sigmoid())
 
     self.intermediate_plus = torch.nn.Sequential(
-                                            torch.nn.Linear(in_features=feature_size, out_features=self.interm_neurons>>1),
+                                            torch.nn.Linear(in_features= 244, out_features=self.interm_neurons>>1),
                                             torch.nn.LeakyReLU())
     
     self.classifier_plus = torch.nn.Linear(in_features=self.interm_neurons>>1, out_features=classes_len)
-    self.loss_criterion = torch.nn.CrossEntropyLoss()
-    
+    if use_regularization:
+      self.loss_criterion = LossFunction(classes_len=classes_len)
+    else:
+      self.loss_criterion = torch.nn.CrossEntropyLoss()
+
     self.device = torch.device("cuda") if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else torch.device("cpu"))
     self.to(device=self.device)
 
@@ -108,15 +126,14 @@ class SeqModel(torch.nn.Module):
       return output, mask
     return output 
 
-  def load(self, path, verbose = True):
-    if verbose:
-      print(f"{bcolors.OKCYAN}{bcolors.BOLD}Weights Loaded{bcolors.ENDC}") 
-    self.load_state_dict(torch.load(path, map_location=self.device, weights_only=True), strict=True)
+  def load(self, path):
+    print(f"{bcolors.OKCYAN}{bcolors.BOLD}Weights Loaded{bcolors.ENDC}") 
+    self.load_state_dict(torch.load(path, map_location=self.device), strict=True)
 
   def save(self, path):
     torch.save(self.state_dict(), path)
 
-  def makeOptimizer(self, lr=1e-5, decay=2e-5, multiplier=1, increase=0.1):
+  def makeOptimizer(self, lr=1e-5, decay=2e-5):
     return torch.optim.RMSprop(self.parameters(), lr, weight_decay=decay)
 
 def measurement(running_stats, task):
@@ -128,8 +145,11 @@ def measurement(running_stats, task):
     return score
 
 
-def train_model(model, trainloader, devloader, epoches, lr, decay, output, task, output_name = None,
-                verbose = True):
+def train_model(model, trainloader, 
+                devloader, epoches, 
+                lr, decay, output, task, 
+                use_regularization,
+                output_name = None):
   
     eloss, eacc, edev_loss, edev_acc = [], [], [], []
 
@@ -138,14 +158,11 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
 
     for epoch in range(epoches):
 
-        running_stats = {'outputs':None, 'labels':None}
+        running_stats = {'outputs':None, 'labels':None, 'masks_l2': None}
         model.train()
 
-        if verbose:
-          itera = tqdm(enumerate(trainloader, 0), total = len(trainloader))
-          itera.set_description(f'Epoch: {epoch:3d}')
-        else:
-          itera = enumerate(trainloader, 0)
+        itera = tqdm(enumerate(trainloader, 0), total = len(trainloader))
+        itera.set_description(f'Epoch: {epoch:3d}')
 
         for j, data in itera:
 
@@ -159,15 +176,22 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
             optimizer.zero_grad()
             outputs, masks = model(data, get_mask=True)
 
-            loss = model.loss_criterion(outputs, labels)
+            if use_regularization:
+              loss, loss_masks = model.loss_criterion(outputs, labels, masks)
+            else:
+              loss = model.loss_criterion(outputs, labels)
+              loss_masks = torch.tensor(0.0)
 
             if running_stats['outputs'] is None:
                 running_stats['outputs'] = outputs.detach().cpu()
                 running_stats['labels'] = data[task]
+                running_stats['masks_l2'] = loss_masks.item()
             else:
                 running_stats['outputs'] = torch.cat((running_stats['outputs'], outputs.detach().cpu()), dim=0)
                 running_stats['labels'] = torch.cat((running_stats['labels'], data[task]), dim=0)
+                running_stats['masks_l2'] = (running_stats['masks_l2'] + loss_masks.item())/2
 
+            loss += loss_masks
             loss.backward()
             optimizer.step()
             del outputs
@@ -175,8 +199,7 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
 
             train_loss = model.loss_criterion(running_stats['outputs'], running_stats['labels']).item()
             train_measure = measurement(running_stats, task)
-            if verbose:
-              itera.set_postfix_str(f"loss:{train_loss:.3f} measure:{train_measure:.3f}") 
+            itera.set_postfix_str(f"loss:{train_loss:.3f} measure:{train_measure:.3f} masks_l2:{running_stats['masks_l2']:.3f}") 
 
             if j == batches-1:
                 eloss += [train_loss]
@@ -202,53 +225,53 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
                             running_dev['outputs'] = torch.cat((running_dev['outputs'], outputs.detach().cpu()), dim=0)
                             running_dev['labels'] = torch.cat((running_dev['labels'], data_batch_dev[task]), dim=0)
 
-                    dev_loss = model.loss_criterion(running_dev['outputs'], running_dev['labels'])
+                    if use_regularization:
+                        dev_loss, loss_masks = model.loss_criterion(running_dev['outputs'], running_dev['labels'], masks)
+                    else:
+                        dev_loss = model.loss_criterion(running_dev['outputs'], running_dev['labels'])
+                        loss_masks = torch.tensor(0.0)
+
                     dev_loss = dev_loss.item()
-                    
                     dev_measure = measurement(running_dev, task)
                     
                 if model.best_acc is None or model.best_acc < dev_measure:
                     model.save(os.path.join(output, f"{output_name}.pt"))
                     model.best_acc = dev_measure
-                if verbose:
-                  itera.set_postfix_str(f"loss:{train_loss:.3f} measure:{train_measure:.3f} dev_loss:{dev_loss:.3f} dev_measure: {dev_measure:.3f}") 
+
+                itera.set_postfix_str(f"loss:{train_loss:.3f} measure:{train_measure:.3f} masks_l2:{running_stats['masks_l2']:.3f}\
+                                      dev_loss:{dev_loss:.3f} dev_measure: {dev_measure:.3f}") 
                 edev_loss += [dev_loss]
                 edev_acc += [dev_measure]
     return {'loss': eloss, 'acc': eacc, 'dev_loss': edev_loss, 'dev_acc': edev_acc}
         
 
-def train_model_dev(data_train, data_dev, task = 'classification', epoches = 4, batch_size = 32, 
+
+
+def train_model_dev(data_train, data_dev, use_regularization, task, epoches = 4, batch_size = 32, 
                     interm_layer_size = 12, lr = 1e-5,  decay=2e-5, output='logs', classes_len = -1,
-                    output_name = None, mapping_feat = None, class_map = None, 
-                    feature_mask = None, verbose = True):
+                    output_name = None, mapping_feat = None, class_map = None):
 
   history = []
 
   history.append({'loss': [], 'acc':[], 'dev_loss': [], 'dev_acc': []})
-  model = SeqModel(interm_layer_size, classes_len,
-                   feature_size = len(feature_mask))
-  if verbose:
-    print(model)
+  model = SeqModel(interm_layer_size, classes_len, use_regularization = use_regularization)
+  
+  print(model)
 
-  trainloader = DataLoader(Data(data_train, mapping_feat['train'], class_map, feature_mask), batch_size=batch_size, shuffle=True, num_workers=4, worker_init_fn=seed_worker)
-  devloader = DataLoader(Data(data_dev, mapping_feat['test'], class_map, feature_mask), batch_size=batch_size, shuffle=False, num_workers=4, worker_init_fn=seed_worker)
+  trainloader = DataLoader(Data(data_train, mapping_feat['train'], class_map), batch_size=batch_size, shuffle=True, num_workers=4, worker_init_fn=seed_worker)
+  devloader = DataLoader(Data(data_dev, mapping_feat['test'], class_map), batch_size=batch_size, shuffle=False, num_workers=4, worker_init_fn=seed_worker)
 
-  history.append(train_model(model, trainloader, devloader, epoches, lr, decay, output, task, output_name = output_name, verbose = verbose))
+  history.append(train_model(model, trainloader, devloader, epoches, lr, decay, output, task, use_regularization = use_regularization, output_name = output_name))
 
   del trainloader
   del model
   del devloader
   return history
 
-
-def evaluate(model, task, data_dev, bs = 32, mapping_feat = None, class_map = None,
-             feature_mask=None, verbose = True):
+def evaluate(model, task, data_dev, bs = 32, mapping_feat = None, class_map = None):
   
-    devloader = DataLoader(Data(data_dev, mapping_feat['test'], class_map, feature_mask), batch_size=bs, shuffle=False, num_workers=4, worker_init_fn=seed_worker)
-    if verbose:
-       itera = tqdm(enumerate(devloader, 0), total = len(devloader))
-    else:
-      itera = enumerate(devloader, 0)
+    devloader = DataLoader(Data(data_dev, mapping_feat['test'], class_map), batch_size=bs, shuffle=False, num_workers=4, worker_init_fn=seed_worker)
+    itera = tqdm(enumerate(devloader, 0), total = len(devloader))
 
     running_stats = {'out':None, 'label':None}
     for j, data in itera:
@@ -265,50 +288,50 @@ def evaluate(model, task, data_dev, bs = 32, mapping_feat = None, class_map = No
     return f1_score(running_stats['label'].numpy(), running_stats['out'].max(dim=-1).indices.numpy(), average= 'macro')
 
     
-#%%
 
-if __name__ ==  '__main__':
+def main( train_file_name: str, test_file_name: str,
+          use_regularization: bool, output_dir: str):
+    """
+    Main function to train and evaluate the SCBMT model.
+
+    :param train_file_name: Path to the training data CSV file.
+    :param test_file_name: Path to the testing data CSV file.
+    :param use_regularization: Boolean flag to indicate whether to use regularization 
+                              to enhance interpretability.
+
+    :param output_dir: Directory to save the output results.
+    """
+    
+    output_name = "SCBM" + ("+R" if use_regularization else "")
 
     test_performance = []
-    
+    for _ in range(5): 
 
-    train_file_name = '../hs_cs/train.csv'
-    test_file_name = '../hs_cs/test.csv'
-
-    train = pd.read_csv(train_file_name, sep=',').fillna('-1')
-    test = pd.read_csv(test_file_name, sep=',').fillna('-1')
+        train = pd.read_csv(train_file_name, sep=',').fillna('-1')
+        test = pd.read_csv(test_file_name, sep=',').fillna('-1')
 
 
-    map_classes = {j:i for i,j in enumerate(list(set(train['Class'].values)))}
+        with open(f'{train_file_name}.pickle', 'rb') as handle:
+            data_transformation = pickle.load(handle)
+            mapping_train = {data_transformation['id'][i]:np.array(data_transformation['values'][i]) for i in range(len(data_transformation['id']))}
 
-    train['Class'] = train['Class'].map(map_classes)
-    test['Class'] = test['Class'].map(map_classes)
-
-    with open(f'{train_file_name}.pickle', 'rb') as handle:
-        data_transformation = pickle.load(handle)
-        mapping_train = {data_transformation['id'][i]:np.array(data_transformation['values'][i]) for i in range(len(data_transformation['id']))}
-
-    with open(f'{test_file_name}.pickle', 'rb') as handle:
-        data_transformation = pickle.load(handle)
-        mapping_test = {data_transformation['id'][i]:np.array(data_transformation['values'][i]) for i in range(len(data_transformation['id']))}
+        with open(f'{test_file_name}.pickle', 'rb') as handle:
+            data_transformation = pickle.load(handle)
+            mapping_test = {data_transformation['id'][i]:np.array(data_transformation['values'][i]) for i in range(len(data_transformation['id']))}
 
 
-    print(len(Counter(train['Class']).keys()))
-
-
-    class_map = {c:i for i, c in enumerate(Counter(train['Class']).keys())}
-
-    for i in range(5):
+        class_map = {c:i for i, c in enumerate(Counter(train['Class']).keys())}
+        print(class_map)
         _ = train_model_dev(data_train=train, data_dev=test, epoches=250, batch_size=128,
-                        interm_layer_size = 128, lr = 2e-3,  decay=1e-6, output='.', task='Class', 
-                        classes_len = len(Counter(train['Class']).keys()), output_name = "Mc",
+                        interm_layer_size = 128, lr = 2e-3,  decay=1e-6, output=output_dir, task='Class', 
+                        classes_len = len(Counter(train['Class']).keys()), output_name = output_name,
                         mapping_feat = {'train': mapping_train, 'test' : mapping_test},
-                        class_map = class_map)
+                        class_map = class_map, use_regularization=use_regularization)
 
 
-        model = SeqModel(interm_size = 128,  classes_len = len(Counter(train['Class']).keys()))
-        
-        model.load(f"Mc.pt")
+        model = SeqModel(interm_size = 128,  classes_len = len(Counter(train['Class']).keys()),
+                         use_regularization=use_regularization)
+        model.load(os.path.join(output_dir, f"{output_name}.pt"))
 
         test_performance += [evaluate(model, task = 'Class', data_dev = test, bs = 8, 
                                         mapping_feat = {'train': mapping_train, 'test' : mapping_test},
@@ -317,8 +340,8 @@ if __name__ ==  '__main__':
         del model
         print(f'Average Performance\n{np.mean(test_performance):.4f}')
 
-    import pickle
-    with open('../hs_cs/Mc.pickle', 'wb') as handle:
+    with open(os.path.join(output_dir, f'{output_name}-resutls.pickle'), 'wb') as handle:
         pickle.dump(test_performance, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    # %%
+if __name__ == "__main__":
+  Fire(main)

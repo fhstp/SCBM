@@ -6,7 +6,8 @@ This directory contains Jupyter notebooks for conducting In-Context Learning exp
 
 These notebooks implement ICL experiments where examples from training data are used to prompt large language models (LLMs) for few-shot classification. Each notebook follows a two-step process:
 
-1. **Example Selection**: Automatically selects representative examples from training data for each class
+1. **Example Selection**: Automatically selects representative examples from training data for each class 
+> Addiationaly the folder `icl_prompts` contains the prompts (including examples) employed in our work.
 2. **ICL Inference**: Uses selected examples to prompt GPT-4o for classification on test data
 
 ## Notebooks
@@ -17,13 +18,11 @@ These notebooks implement ICL experiments where examples from training data are 
 - `ICL-HS_CS.ipynb` - Hate speech vs counterspeech vs neither classification
 - `ICL-TSNH.ipynb` - Counter speech detection (binary classification)
 
-## Methodology
-
 ### Example Selection Process
 - Filters training examples by text length (< 180 characters for readability)
 - Randomly samples 3-5 examples per class
 - Formats examples with special markers (`<text_icl_begin>` ... `<text_icl_end>`)
-- Saves formatted prompts to `../icl_promtps/{dataset}.json`
+- Saves formatted prompts to `icl_promtps/{dataset}.json`
 
 ### ICL Inference Process
 - Loads pre-generated ICL prompts

@@ -50,19 +50,22 @@ class Data(Dataset):
     if torch.is_tensor(idx):
       idx = idx.tolist()
 
-    ret = {key: self.data[key][idx] for key in self.data.keys()}
-    ret['text'] = ret['text'] + ' [SEP] ' + ret['context']
+    ret = {key: self.data[key].iloc[idx] for key in self.data.keys()}
+    if 'context' in ret:
+      ret['text'] = ret['text'] + ' [SEP] ' + ret['context']
+    
     return ret
    
 
 class SeqModel(torch.nn.Module):
 
-  def __init__(self, interm_size, model, task_size):
+  def __init__(self, interm_size, model, task, n_classes):
 
     super(SeqModel, self).__init__()
 		
     self.best_acc = None
     self.max_length = 128
+    self.task = task
     self.interm_neurons = interm_size
     self.transformer, self.tokenizer = HugginFaceLoad( model )
     self.model = model
@@ -70,10 +73,10 @@ class SeqModel(torch.nn.Module):
                                             torch.nn.Linear(in_features=self.interm_neurons, out_features=self.interm_neurons>>1),
                                             torch.nn.LeakyReLU())
     
-    self.classifier = torch.nn.Linear(in_features=self.interm_neurons>>1, out_features=task_size)
+    self.classifier = torch.nn.Linear(in_features=self.interm_neurons>>1, out_features=n_classes)
     self.loss_criterion = torch.nn.CrossEntropyLoss()
     
-    self.device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
+    self.device = torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
     self.to(device=self.device)
 
   def forward(self, data):
@@ -129,7 +132,7 @@ def measurement(running_stats, task):
     return score
 
 
-def train_model(model_name, model, trainloader, devloader, epoches, lr, decay, output):
+def train_model(model_name, model, trainloader, devloader, epoches, lr, decay, output, task):
   
     eloss, eacc, edev_loss, edev_acc = [], [], [], []
 
@@ -146,26 +149,25 @@ def train_model(model_name, model, trainloader, devloader, epoches, lr, decay, o
 
         for j, data in itera:
 
-            torch.cuda.empty_cache()         
-            labels = data['Class'].to(model.device)     
+            torch.cuda.empty_cache()  
+            labels = torch.tensor(data[task]).to(model.device)     
 
             optimizer.zero_grad()
             outputs = model(data['text'])
-            # print(outputs)
             loss = model.loss_criterion(outputs, labels)
 
             if running_stats['outputs'] is None:
                 running_stats['outputs'] = outputs.detach().cpu()
-                running_stats['labels'] = data['Class']
+                running_stats['labels'] = data[task]
             else:
                 running_stats['outputs'] = torch.cat((running_stats['outputs'], outputs.detach().cpu()), dim=0)
-                running_stats['labels'] = torch.cat((running_stats['labels'], data['Class']), dim=0)
+                running_stats['labels'] = torch.cat((running_stats['labels'], data[task]), dim=0)
 
             loss.backward()
             optimizer.step()
 
             train_loss = model.loss_criterion(running_stats['outputs'], running_stats['labels']).item()
-            train_measure = measurement(running_stats, 'Class')
+            train_measure = measurement(running_stats, task)
             itera.set_postfix_str(f"loss:{train_loss:.3f} measure:{train_measure:.3f}") 
 
             if j == batches-1:
@@ -183,13 +185,13 @@ def train_model(model_name, model, trainloader, devloader, epoches, lr, decay, o
                         
                         if running_dev['outputs'] is None:
                             running_dev['outputs'] = outputs.detach().cpu()
-                            running_dev['labels'] = data_batch_dev['Class']
+                            running_dev['labels'] = data_batch_dev[task]
                         else:
                             running_dev['outputs'] = torch.cat((running_dev['outputs'], outputs.detach().cpu()), dim=0)
-                            running_dev['labels'] = torch.cat((running_dev['labels'], data_batch_dev['Class']), dim=0)
+                            running_dev['labels'] = torch.cat((running_dev['labels'], data_batch_dev[task]), dim=0)
 
                     dev_loss = model.loss_criterion(running_dev['outputs'], running_dev['labels']).item()
-                    dev_measure = measurement(running_dev, 'Class')
+                    dev_measure = measurement(running_dev, task)
                     
                 if model.best_acc is None or model.best_acc < dev_measure:
                     model.save(os.path.join(output, f"best_model.pt"))
@@ -202,25 +204,25 @@ def train_model(model_name, model, trainloader, devloader, epoches, lr, decay, o
     return {'loss': eloss, 'acc': eacc, 'dev_loss': edev_loss, 'dev_acc': edev_acc}
         
 
-def train_model_dev(model_name, data_train, data_dev, task_size = 'classification', epoches = 4, batch_size = 8, 
-                    interm_layer_size = 64, lr = 1e-5,  decay=2e-5, output='logs'):
+def train_model_dev(model_name, data_train, data_dev, task = 'classification', epoches = 4, batch_size = 8, 
+                    interm_layer_size = 64, lr = 1e-5,  decay=2e-5, output='logs', n_classes=2):
 
   history = []
 
   history.append({'loss': [], 'acc':[], 'dev_loss': [], 'dev_acc': []})
-  model = SeqModel(interm_layer_size, model_name, task_size)
+  model = SeqModel(interm_layer_size, model_name, task, n_classes=n_classes)
 
   trainloader = DataLoader(Data(data_train), batch_size=batch_size, shuffle=True, num_workers=4, worker_init_fn=seed_worker)
   devloader = DataLoader(Data(data_dev), batch_size=batch_size, shuffle=True, num_workers=4, worker_init_fn=seed_worker)
 
-  history.append(train_model(f'{model_name}', model, trainloader, devloader, epoches, lr, decay, output))
+  history.append(train_model(f'{model_name}', model, trainloader, devloader, epoches, lr, decay, output, task))
 
   del trainloader
   del model
   del devloader
   return history
 
-def predict(model, data_dev):
+def predict(model, outputfile, data_dev):
   
   devloader = DataLoader(Data(data_dev), batch_size=16, shuffle=False, num_workers=4, worker_init_fn=seed_worker)
   itera = tqdm(enumerate(devloader, 0))
@@ -233,12 +235,12 @@ def predict(model, data_dev):
 
       if running_stats['outputs'] is None:
         running_stats['outputs'] = outputs.detach().cpu()
-        running_stats['id'] = data['id']
+        running_stats['id'] = list(data['id'])
       else:
         running_stats['outputs'] = torch.cat((running_stats['outputs'], outputs.detach().cpu()), dim=0)
-        running_stats['id'] = torch.cat((running_stats['id'], data['id']), dim=0)
+        running_stats['id'] = running_stats['id'] + list(data['id'])
 
-  out = {'id': list(running_stats['id'].detach().cpu().numpy()), 'pred': list(torch.max(running_stats['outputs'], 1).indices.detach().cpu().numpy())}
+  out = {'id': running_stats['id'], 'pred': list(torch.max(running_stats['outputs'], 1).indices.detach().cpu().numpy())}
   return out
 
 

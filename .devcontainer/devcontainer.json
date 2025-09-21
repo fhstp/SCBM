@@ -1,0 +1,30 @@
+{
+	"name": "rlabadie_counterspeech-llm",
+
+	"initializeCommand": "docker network inspect rlabadie_counterspeech >/dev/null 2>&1 || docker network create rlabadie_counterspeech",
+	
+	"build": {
+		"context": "..",  // Sets the run context to one level up instead of the .devcontainer folder.
+		"dockerfile": "../Dockerfile"  // Use the Dockerfile at the parent directory level.
+	},
+	"features": {
+		"ghcr.io/raucha/devcontainer-features/pytorch:1": {}  // Pytorch feature support.
+	},
+	"mounts": [
+		"source=/mnt/nextcloud,target=/workspace/nextcloud,type=bind" // Bind mount for shared storage.
+	],
+	"runArgs": [
+		"--gpus", "\"device=MIG-dc6c9ab8-c970-5dad-9cb3-de68126a5327\"",  // Specify the GPU(s) via GPUID.
+		"--name",  "rlabadie_counterspeech-llm",  // Set container name.
+		"--cpuset-cpus", "100-108" , // Limit the container to specific CPUs.
+		// "--mount", "type=bind,source=/mnt/temporaryMLStorqage/projects/imrea/counterspeech,target=/workspace/shared_storage",
+		"--shm-size=256g",
+		"--network", "rlabadie_counterspeech"
+	],
+	"extensions": [
+        "ms-python.python",        
+        "ms-toolsai.jupyter",       
+		"ms-mechatroner.rainbow-csv",
+    ],
+	"remoteUser": "app"
+}

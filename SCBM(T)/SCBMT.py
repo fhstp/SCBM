@@ -1,7 +1,6 @@
-#%%
 import os
 from collections import Counter
-# os.environ['PYTORCH_MPS_HIGH_WATERMARK_RATIO'] = '0'
+from fire import Fire
   
 from sklearn.model_selection import StratifiedKFold, StratifiedShuffleSplit
 from transformers import AutoModel, AutoTokenizer, BloomForCausalLM
@@ -68,7 +67,7 @@ class Data(Dataset):
 
 class LossFunction(torch.nn.Module):
 
-  def __init__(self, classes_len = 3):
+  def __init__(self, classes_len):
     super(LossFunction, self).__init__()
     
     self.loss = torch.nn.CrossEntropyLoss()
@@ -91,12 +90,12 @@ class LossFunction(torch.nn.Module):
 
 class SeqModel(torch.nn.Module):
 
-  def __init__(self, interm_size, classes_len):
+  def __init__(self, interm_size, classes_len, use_regularization):
 
     super(SeqModel, self).__init__()
 		
     self.best_acc = None
-    self.max_length = 128
+    self.max_length = 256
     self.interm_neurons = interm_size
     self.transformer, self.tokenizer = HugginFaceLoad( "FacebookAI/xlm-roberta-base" )
     self.normalize_features = torch.nn.LayerNorm(244)
@@ -110,8 +109,11 @@ class SeqModel(torch.nn.Module):
                                             torch.nn.LeakyReLU())
     
     self.classifier_plus = torch.nn.Linear(in_features=self.interm_neurons>>1, out_features=classes_len)
-    self.loss_criterion = LossFunction()
-    
+    if use_regularization:
+      self.loss_criterion = LossFunction(classes_len=classes_len)
+    else:
+      self.loss_criterion = torch.nn.CrossEntropyLoss()
+
     self.device = torch.device("cuda") if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else torch.device("cpu"))
     self.to(device=self.device)
 
@@ -140,7 +142,7 @@ class SeqModel(torch.nn.Module):
   def save(self, path):
     torch.save(self.state_dict(), path)
 
-  def makeOptimizer(self, lr=1e-5, decay=2e-5, multiplier=1, increase=0.1):
+  def makeOptimizer(self, lr=1e-5, decay=2e-5):
     return torch.optim.RMSprop(self.parameters(), lr, weight_decay=decay)
 
 def measurement(running_stats, task):
@@ -152,7 +154,11 @@ def measurement(running_stats, task):
     return score
 
 
-def train_model(model, trainloader, devloader, epoches, lr, decay, output, task, output_name = None):
+def train_model(model, trainloader, 
+                devloader, epoches, 
+                lr, decay, output, task, 
+                use_regularization,
+                output_name = None):
   
     eloss, eacc, edev_loss, edev_acc = [], [], [], []
 
@@ -179,7 +185,11 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
             optimizer.zero_grad()
             outputs, masks = model(data, get_mask=True)
 
-            loss, loss_masks = model.loss_criterion(outputs, labels, masks)
+            if use_regularization:
+              loss, loss_masks = model.loss_criterion(outputs, labels, masks)
+            else:
+              loss = model.loss_criterion(outputs, labels)
+              loss_masks = torch.tensor(0.0)
 
             if running_stats['outputs'] is None:
                 running_stats['outputs'] = outputs.detach().cpu()
@@ -224,9 +234,13 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
                             running_dev['outputs'] = torch.cat((running_dev['outputs'], outputs.detach().cpu()), dim=0)
                             running_dev['labels'] = torch.cat((running_dev['labels'], data_batch_dev[task]), dim=0)
 
-                    dev_loss = model.loss_criterion(running_dev['outputs'], running_dev['labels'])
+                    if use_regularization:
+                        dev_loss, loss_masks = model.loss_criterion(running_dev['outputs'], running_dev['labels'], masks)
+                    else:
+                        dev_loss = model.loss_criterion(running_dev['outputs'], running_dev['labels'])
+                        loss_masks = torch.tensor(0.0)
+
                     dev_loss = dev_loss.item()
-                    # masks_l2 = masks_l2.item()
                     dev_measure = measurement(running_dev, task)
                     
                 if model.best_acc is None or model.best_acc < dev_measure:
@@ -242,21 +256,21 @@ def train_model(model, trainloader, devloader, epoches, lr, decay, output, task,
 
 
 
-def train_model_dev(data_train, data_dev, task = 'classification', epoches = 4, batch_size = 32, 
+def train_model_dev(data_train, data_dev, use_regularization, task, epoches = 4, batch_size = 32, 
                     interm_layer_size = 12, lr = 1e-5,  decay=2e-5, output='logs', classes_len = -1,
                     output_name = None, mapping_feat = None, class_map = None):
 
   history = []
 
   history.append({'loss': [], 'acc':[], 'dev_loss': [], 'dev_acc': []})
-  model = SeqModel(interm_layer_size, classes_len)
+  model = SeqModel(interm_layer_size, classes_len, use_regularization = use_regularization)
   
   print(model)
 
   trainloader = DataLoader(Data(data_train, mapping_feat['train'], class_map), batch_size=batch_size, shuffle=True, num_workers=4, worker_init_fn=seed_worker)
   devloader = DataLoader(Data(data_dev, mapping_feat['test'], class_map), batch_size=batch_size, shuffle=False, num_workers=4, worker_init_fn=seed_worker)
 
-  history.append(train_model(model, trainloader, devloader, epoches, lr, decay, output, task, output_name = output_name))
+  history.append(train_model(model, trainloader, devloader, epoches, lr, decay, output, task, use_regularization = use_regularization, output_name = output_name))
 
   del trainloader
   del model
@@ -283,15 +297,24 @@ def evaluate(model, task, data_dev, bs = 32, mapping_feat = None, class_map = No
     return f1_score(running_stats['label'].numpy(), running_stats['out'].max(dim=-1).indices.numpy(), average= 'macro')
 
     
-#%%
 
-if __name__ ==  '__main__':
+def main( train_file_name: str, test_file_name: str,
+          use_regularization: bool, output_dir: str):
+    """
+    Main function to train and evaluate the SCBMT model.
+
+    :param train_file_name: Path to the training data CSV file.
+    :param test_file_name: Path to the testing data CSV file.
+    :param use_regularization: Boolean flag to indicate whether to use regularization 
+                              to enhance interpretability.
+
+    :param output_dir: Directory to save the output results.
+    """
+    
+    output_name = "SCBM" + ("+R" if use_regularization else "")
 
     test_performance = []
-    for i in range(5):
-
-        train_file_name = '../hs_cs/train.csv'
-        test_file_name = '../hs_cs/test.csv'
+    for _ in range(5): 
 
         train = pd.read_csv(train_file_name, sep=',').fillna('-1')
         test = pd.read_csv(test_file_name, sep=',').fillna('-1')
@@ -309,14 +332,15 @@ if __name__ ==  '__main__':
         class_map = {c:i for i, c in enumerate(Counter(train['Class']).keys())}
         print(class_map)
         _ = train_model_dev(data_train=train, data_dev=test, epoches=16, batch_size=32,
-                        interm_layer_size = 128, lr = 1e-5,  decay=1e-6, output='.', task='Class', 
-                        classes_len = len(Counter(train['Class']).keys()), output_name = "Mb+L",
+                        interm_layer_size = 128, lr = 1e-5,  decay=1e-6, output=output_dir, task='Class', 
+                        classes_len = len(Counter(train['Class']).keys()), output_name = output_name,
                         mapping_feat = {'train': mapping_train, 'test' : mapping_test},
-                        class_map = class_map)
+                        class_map = class_map, use_regularization=use_regularization)
 
 
-        model = SeqModel(interm_size = 128,  classes_len = len(Counter(train['Class']).keys()))
-        model.load(f"Mb+L.pt")
+        model = SeqModel(interm_size = 128,  classes_len = len(Counter(train['Class']).keys()),
+                         use_regularization=use_regularization)
+        model.load(os.path.join(output_dir, f"{output_name}.pt"))
 
         test_performance += [evaluate(model, task = 'Class', data_dev = test, bs = 8, 
                                         mapping_feat = {'train': mapping_train, 'test' : mapping_test},
@@ -325,8 +349,8 @@ if __name__ ==  '__main__':
         del model
         print(f'Average Performance\n{np.mean(test_performance):.4f}')
 
-    import pickle
-    with open('../hs_cs/Mb+L.pickle', 'wb') as handle:
+    with open(os.path.join(output_dir, f'{output_name}-resutls.pickle'), 'wb') as handle:
         pickle.dump(test_performance, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
-    # %%
+if __name__ == "__main__":
+  Fire(main)
